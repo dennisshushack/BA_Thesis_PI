@@ -1,5 +1,5 @@
 [Unit]
-Description=Thesis monitor
+Description=Thesis monitor HPC & Ressources
 After=multi-user.target
 
 [Service]
