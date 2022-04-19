@@ -7,8 +7,8 @@
 
 
 ## Setup of the Monitors:
-For each of these monitor scripts a different systemd service needs to be created: `m1,m2,m3`
-For each of the files a sample .service file can be found in the service folder
+For each of these monitor scripts a different systemd service needs to be created: `m1,m2,m3`.
+Sample service files can be found in the service folder of this repository. Please copy there contents in the following files:
 * For monitor 1: `vim /etc/systemd/system/m1.service`
 * For monitor 2: `vim /etc/systemd/system/m2.service`
 
