@@ -13,6 +13,11 @@ Sample service files can be found in the service folder of this repository. Plea
 * For monitor 2: `vim /etc/systemd/system/m2.service`
 * For monitor 3: `vim /etc/systemd/system/m2.service`
 
+```
+sudo systemctl daemon-reload
+sudo systemctl enable {m1,m2 or m3}.service
+```
+
 ## Requirements:
 1. You will need Python 3 and python-venv installed: `sudo apt install python3-venv` 
 2. You will need to make the two shell scripts of monitor 1 & monitor 2 executable `sudo chmod + x ./example.sh`
