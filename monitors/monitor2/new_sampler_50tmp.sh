@@ -17,7 +17,7 @@ desiredSamples=99999
 timeAcumulative=0
 
 #	Final and temporal output files
-finalOutput="/tmp/monitors/m2_$(date +'%Y-%m-%d-%H-%M')_${timeWindowSeconds}s"
+finalOutput="/tmp/monitors/m2/m2_$(date +'%Y-%m-%d-%H-%M')_${timeWindowSeconds}s"
 tempOutput=temp
 
 ##############################################################
