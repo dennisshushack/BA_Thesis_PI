@@ -50,7 +50,7 @@ fi
 
 if [ -z "$TIME" ]
 then
-	TIME="2 days"
+	TIME="100"
 fi
 
 if [ -z "$SLEEP" ]
@@ -61,7 +61,7 @@ fi
 echo "Starting monitoring script"
 
 Unix_time_current=$(date +%s)
-Unix_time_start_plus=Unix_time_current + $TIME
+Unix_time_start_plus= $Unix_time_current + $TIME
 echo "Running the monitor for $TIME"
 echo "Timestamp start: " "$Unix_time_current"
 echo "Time in $TIME: " "$Unix_time_start_plus"
