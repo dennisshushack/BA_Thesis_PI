@@ -1,5 +1,5 @@
 [Unit]
-Description=Huertas Monitor
+Description=Monitor HPC & Ressources Dr.Huertas
 After=multi-user.target
 
 [Service]
