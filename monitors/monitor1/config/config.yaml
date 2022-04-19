@@ -136,8 +136,3 @@ perf_events:
   - fib:fib_table_lookup
   - raw_syscalls:sys_enter
   - random:credit_entropy_bits
-rabbitMQ:
-  host: localhost
-  password: guest
-  port: 5672
-  user: guest
