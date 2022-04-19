@@ -14,9 +14,10 @@ Sample service files can be found in the service folder of this repository. Plea
 * For monitor 3: `vim /etc/systemd/system/m2.service`
 
 ```
+# For each newly added service:
 sudo systemctl daemon-reload
 sudo systemctl enable {m1,m2 or m3}.service
-# To test
+# To test:
 sudo systemctl start {m1,m2 or m3}.service
 sudo systemctl stop {m1,m2 or m3}.service
 ```
