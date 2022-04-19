@@ -6,7 +6,7 @@ After=multi-user.target
 Type=simple
 Restart=on-failure
 User=root
-ExecStart=/bin/bash /root/BA_Thesis_ds/monitor2/new_sampler_50tmp.sh
+ExecStart=/bin/bash /root/BA_Thesis_ds/monitors/monitor2/new_sampler_50tmp.sh
 
 [Install]
 WantedBy=multi-user.target
