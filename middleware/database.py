@@ -10,7 +10,7 @@ def create_table():
     c.execute("""CREATE TABLE IF NOT EXISTS todos (
             task text,
             category text,
-            monitors array,
+            monitors string,
             server text,
             time integer,
             date_added integer,
@@ -70,7 +70,7 @@ def change_position(old_position: int, new_position: int, commit=True):
 def complete_todo(position: int):
     with conn:
         c.execute('UPDATE todos SET status = 2, date_completed = :date_completed WHERE position = :position',
-                  {'position': position, 'date_completed': datetime.datetime.now().timestamp()})
+                  {'position': position, 'date_completed': datetime.datetime.now()})
 
 
 # Gets the position of the todo with the given task.
