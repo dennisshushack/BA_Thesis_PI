@@ -1,9 +1,9 @@
 # Monitor Scripts 
 
 ## Differences between the monitors:
-* Monitor 1: Monitors HPC and Ressource usage -> Created in a BA Thesis 
-* Monitor 2: Also monitors HPC & Ressource usage -> Created by Dr.Huertas
-* Monitor 3: Monitors Systemcalls and is also part of a BA Thesis
+* Monitor 1: Monitors HPC and Ressource usage -> Created in a BA Thesis (5 seconds time window)
+* Monitor 2: Also monitors HPC & Ressource usage -> Created by Dr.Huertas (5 seconds time window)
+* Monitor 3: Monitors Systemcalls and is also part of a BA Thesis (10 seconds time window)
 
 
 ## Setup of the Monitors:
