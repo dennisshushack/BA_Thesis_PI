@@ -1,0 +1,12 @@
+[Unit]
+Description=Thesis monitor
+After=multi-user.target
+
+[Service]
+Type=idle
+Restart=on-failure
+User=root
+ExecStart=/bin/bash -c 'cd /root/thesis_monitor/ && source monitor_env/bin/activate && python main.py'
+
+[Install]
+WantedBy=multi-user.target
