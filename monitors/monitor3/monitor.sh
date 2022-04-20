@@ -49,7 +49,7 @@ fi
 
 if [ -z "$TIME" ]
 then
-	TIME="100"
+	TIME="2 days"
 fi
 
 if [ -z "$SLEEP" ]
@@ -63,7 +63,7 @@ Unix_time_current=$(date +%s)
 Unix_time_start_plus= Unix_time_start_plus=$(date +%s --date="$TIME")
 echo "Running the monitor for $TIME"
 echo "Timestamp start: " "$Unix_time_current"
-echo "Time in $TIME seconds: " "$Unix_time_start_plus"
+echo "Time in $TIME: " "$Unix_time_start_plus"
 echo "Results path on the device: " "$RESULTS_PATH"
 echo "Rsync path on the device: " "$RSYNC_PATH"
 counter=0
