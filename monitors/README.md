@@ -5,6 +5,17 @@
 * Monitor 2: Also monitors HPC & Ressource usage -> Created by Dr.Huertas (5 seconds time window)
 * Monitor 3: Monitors Systemcalls and is also part of a BA Thesis (10 seconds time window)
 
+## Requirements:
+1. You will need Python 3 and python-venv installed: `sudo apt install python3-venv` 
+2. You will need to make the two shell scripts of monitor 1 & monitor 2 executable `sudo chmod + x ./example.sh`
+3. For Monitor 1 please create a venv and install the requirements.txt 
+```
+cd BA_Thesis_ds/monitors/monitor1
+python3 -m venv env
+source env/bin/activate
+pip install -r requirements.txt
+deactivate
+```
 
 ## Setup of the Monitors:
 For each of these monitor scripts a different systemd service needs to be created: `m1,m2,m3`.
@@ -20,9 +31,5 @@ sudo systemctl daemon-reload
 sudo systemctl start {m1,m2 or m3}.service
 sudo systemctl stop {m1,m2 or m3}.service
 ```
-
-## Requirements:
-1. You will need Python 3 and python-venv installed: `sudo apt install python3-venv` 
-2. You will need to make the two shell scripts of monitor 1 & monitor 2 executable `sudo chmod + x ./example.sh`
 
 
