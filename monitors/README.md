@@ -6,7 +6,7 @@
 * Monitor 3: Monitors Systemcalls and is also part of a BA Thesis (10 seconds time window)
 
 ## Requirements:
-1. You will need Python 3 and python-venv installed: `sudo apt install python3-venv` 
+1. You will need Python 3 /https://www.python.org/downloads/) and python-venv installed: `sudo apt install python3-venv` 
 2. You will need to make the two shell scripts of monitor 1 & monitor 2 executable `sudo chmod + x ./example.sh`
 3. For Monitor 1 please create a venv and install the requirements.txt 
 ```
