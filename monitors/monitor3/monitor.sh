@@ -97,7 +97,7 @@ do
 	EPOCH=$(date +%s.%3N)
 	Date_Hourly=$(date -d @"$EPOCH" +%d-%m-%H_%M_%S)
 		
-	perf trace -S -T -o "$RESULTS_PATH/""${Date_Hourly}".log -a -- sleep "$SLEEP"
+	perf trace -S -T -o "$RESULTS_PATH/""${Date_Hourly}".log -e !nanosleep -a -- sleep "$SLEEP"
 	echo -e "EPOCH: $EPOCH \nUPTIME:$UPTIME" >> "$RESULTS_PATH/""${Date_Hourly}".log &
 	Unix_time_current=$(date +%s)
 	counter=$((counter+1))
