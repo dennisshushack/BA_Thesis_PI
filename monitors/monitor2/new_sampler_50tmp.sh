@@ -62,7 +62,7 @@ do
 	else
 		connectivity="0"
 	fi
-	timestamp=$(($(date +%s%N)/1000000))
+	timestamp=$(date +%s)
 	
 	#	First capture for network resources, results will be calculated as the difference between this capture and the one taken later
 	if [ "$resourceMonitor" = true ]
