@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Script takes arguments: server 
+# Example: ./install.sh dennis@localhost 
+while getopts s:p: flag
+do
+    case "${flag}" in
+        s) server=${OPTARG};;
+    esac
+done
+
 # Update the system and upgrade the packages
 apt-get update
 # apt-get upgrade -y
@@ -35,5 +44,13 @@ cd monitor3
 chmod +x monitor.sh
 
 echo "Monitor2 and monitor3 made executable"
+
+
+# Create a passwordless ssh connection to a server:
+# Check if id_rsa.pub already exists
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
+ssh-copy-id -i ~/.ssh/id_rsa.pub $server
+echo "SSH connection created"
+
 
 
