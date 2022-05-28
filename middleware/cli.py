@@ -81,11 +81,19 @@ def show():
     """    
     show_table()
 
-@cli.command(name='services', help="See the status of the monitoring systemd services")
-def services():
+@cli.command(name='status_services', help="See the status of the monitoring systemd services")
+def status_services():
     os.system("systemctl status m1.service")
     os.system("systemctl status m2.service")
     os.system("systemctl status m3.service")
+
+@cli.command(name='stop_services', help="Stop all services")
+def stop_services():
+    os.system("systemctl stop m1.service")
+    os.system("systemctl stop m2.service")
+    os.system("systemctl stop m3.service")
+    os.system("systemctl daemon-reload")
+
 
 
 ################ Helper Functios ################
@@ -176,20 +184,13 @@ def check_directories_on_device():
     """
     Creates the temporary directories to save the .csv/.log and .txt files if it does not exist
     """
-    if not os.path.exists("/tmp/monitors"):
-        os.system("mkdir /tmp/monitors")
-        os.system("mkdir /tmp/monitors/m1")
-        os.system("mkdir /tmp/monitors/m2")
-        os.system("mkdir /tmp/monitors/m3")
-    else:
-        if not os.path.exists("/tmp/monitors/m1"):
-            os.system("mkdir /tmp/monitors/m1")
-        
-        if not os.path.exists("/tmp/monitors/m2"):
-            os.system("mkdir /tmp/monitors/m2")
-        
-        if not os.path.exists("/tmp/monitors/m3"):
-            os.system("mkdir /tmp/monitors/m3")
+    if os.path.exists("/tmp/monitors"):
+        os.system("rm -rf /tmp/monitors")
+
+    os.system("mkdir /tmp/monitors")
+    os.system("mkdir /tmp/monitors/m1")
+    os.system("mkdir /tmp/monitors/m2")
+    os.system("mkdir /tmp/monitors/m3")
        
 def start_monitor(seconds: int, position: int, active_services: array, server: str):
     """
@@ -199,14 +200,14 @@ def start_monitor(seconds: int, position: int, active_services: array, server: s
     click.echo("Please wait {seconds} seconds to start a new Monitoring Todo".format(seconds=seconds))
     for service in active_services:
         os.system("systemctl start {service} > /dev/null".format(service=service))
-    # Wait 20 seconds to let all services properly start up:
-    time.sleep(20)
+    # Wait to let all services properly start up:
+    wait_till_counter_starts()
     logging.info("Starting Monitoring")
     start = time.perf_counter()
     with click.progressbar(range(seconds)) as progress:
         for value in progress:
             time.sleep(1)
-            if total % 60 == 0:
+            if (total % 60 == 0) and (total != 0):
                 t1 = threading.Thread(target=thread_work, args=(server,active_services))
                 t1.start()
             total += 1
@@ -235,6 +236,7 @@ def show_table():
         is_done = "Done" if task.status == 2 else "Not Done"
         table.append([task.position+1, task.task, task.category,task.mltype, task.monitors, str(task.time), is_done, task.date_added,task.date_completed])
     table = tabulate(table, headers=["#", "Task", "Category", "Type", "Monitors", "Seconds", "Done","Added","Completed"], tablefmt="fancy_grid")
+    click.echo("Table for the device with the following cpu-id: {cpu_id}".format(cpu_id=getserial()))
     click.echo(table)
 
 def replace_env(server: str ,time: int):
@@ -263,8 +265,8 @@ def send_delete(server, directory):
     # Check if the directory exists
     click.echo("Sending data to server  for monitor {}...".format(directory))
     # Send all files located in the directory to the server
-    os.system("rsync -vr /tmp/monitors/{directory}/ {server}/{directory}".format(server=server, directory=directory))
-    os.system("rm -rf /tmp/monitors/{directory}/*".format(directory=directory))
+    os.system("rsync -vr /tmp/monitors/{directory}/ {server}/{directory} > /dev/null".format(server=server, directory=directory))
+    # os.system("rm -rf /tmp/monitors/{directory}/*".format(directory=directory))
     click.echo("Data sent to server and deleted from local directory")
 
 def send_data(server, services):
@@ -275,7 +277,7 @@ def send_data(server, services):
     monitors = []
     for service in services:
         monitor = service.split(".")[0]
-        os.system("rsync -vr /tmp/monitors/{monitor}/ {server}/{monitor}".format(monitor=monitor, server=server))
+        os.system("rsync -vr /tmp/monitors/{monitor}/ {server}/{monitor} > /dev/null".format(monitor=monitor, server=server))
 
 def check_services(services):
     """
@@ -284,7 +286,7 @@ def check_services(services):
     for service in services:
         status = os.system('systemctl is-active --quiet {service}'.format(service=service))
         if status != 0:
-            os.system("systemctl restart {service}".format(service=service))
+            os.system("systemctl restart {service} > /dev/null".format(service=service))
             logging.debug("Restarted service {}".format(service))
 
 
@@ -297,8 +299,32 @@ def thread_work(server: str, active_services: array):
     send_data(server, active_services)
     check_services(active_services)
 
+def wait_till_counter_starts():
+    """
+    This function waits a certain time till the actual timer countdown starts!
+    Checks if in the directories /tmp/monitors/m1 and /tmp/monitors/m2 & /tmp/monitors/m3 any files are present
+    """
+    while True:
+        # Check if there is a file in the directory /tmp/monitors/m1
+        list_m1 = os.listdir('/tmp/monitors/m1') 
+        number_files_m1 = len(list_m1)
+        
+        # Check if there is a file in the directory /tmp/monitors/m2
+        list_m2 = os.listdir('/tmp/monitors/m2') 
+        number_files_m2 = len(list_m2)
+
+        # Check if there is a file in the directory /tmp/monitors/m3
+        list_m3 = os.listdir('/tmp/monitors/m3')
+        number_files_m3 = len(list_m3)
+
+        if (number_files_m1 > 0) and (number_files_m2) > 0 and (number_files_m3) > 0:
+            break
+        else:
+            time.sleep(1)
     
 if __name__ == '__main__':
     # Create log file
     logging.basicConfig(filename='cli.log', level=logging.DEBUG, format='%(asctime)s:%(levelname)s:%(message)s')
     cli()
+
+
