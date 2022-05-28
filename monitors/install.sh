@@ -50,6 +50,7 @@ echo "Monitor2 and monitor3 made executable"
 
 # Create a passwordless ssh connection to a server:
 # Check if id_rsa.pub already exists
+mkdir ~/.ssh/
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
 ssh-copy-id -i ~/.ssh/id_rsa.pub $server
 echo "SSH connection created"
