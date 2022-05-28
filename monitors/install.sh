@@ -9,6 +9,9 @@ do
     esac
 done
 
+# Installs git:
+sudo apt-get install git
+
 # Update the system and upgrade the packages
 apt-get update
 # apt-get upgrade -y
@@ -44,7 +47,6 @@ cd monitor3
 chmod +x monitor.sh
 
 echo "Monitor2 and monitor3 made executable"
-
 
 # Create a passwordless ssh connection to a server:
 # Check if id_rsa.pub already exists
