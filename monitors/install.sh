@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script takes arguments: server 
-# Example: ./install.sh dennis@localhost 
+# Example: ./install.sh -s dennis@localhost 
 while getopts s:p: flag
 do
     case "${flag}" in
