@@ -10,6 +10,7 @@ def create_table():
     c.execute("""CREATE TABLE IF NOT EXISTS todos (
             task text,
             category text,
+            mltype text,
             monitors string,
             server text,
             time integer,
@@ -29,8 +30,8 @@ def insert_todo(todo: Todo):
     count = c.fetchone()[0]
     todo.position = count if count else 0
     with conn:
-        c.execute('INSERT INTO todos VALUES (:task, :category, :monitors, :server, :time, :date_added, :date_completed, :status, :position)',
-        {'task': todo.task, 'category': todo.category, 'monitors': todo.monitors, 'server': todo.server , 'time': todo.time, 'date_added': todo.date_added,
+        c.execute('INSERT INTO todos VALUES (:task, :category, :mltype, :monitors, :server, :time, :date_added, :date_completed, :status, :position)',
+        {'task': todo.task, 'category': todo.category, 'mltype': todo.mltype, 'monitors': todo.monitors, 'server': todo.server , 'time': todo.time, 'date_added': todo.date_added,
          'date_completed': todo.date_completed, 'status': todo.status, 'position': todo.position })
 
 
@@ -74,6 +75,6 @@ def complete_todo(position: int):
 
 
 # Gets the position of the todo with the given task.
-def get_position(task: str) -> int:
-    c.execute('select position from todos where task = :task', {'task': task})
+def get_position(task: str, time: int) -> int:
+    c.execute('select position from todos where task = :task and time = :time', {'task': task, 'time': time})
     return c.fetchone()[0]

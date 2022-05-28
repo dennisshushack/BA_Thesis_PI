@@ -1,12 +1,13 @@
 import datetime
 
 class Todo:
-    def __init__(self, task, category, monitors, server, time,
+    def __init__(self, task, category, mltype, monitors, server, time,
                  date_added=None, date_completed=None,
                  status=None, position=None):
         self.task = task
         self.category = category
         self.monitors = monitors
+        self.mltype = mltype
         self.server = server
         self.time = time
         self.date_added = date_added if date_added is not None else datetime.datetime.now()
@@ -15,6 +16,6 @@ class Todo:
         self.position = position if position is not None else None
 
     def __repr__(self) -> str:
-        return "({},{},{},{},{},{},{},{},{})".format(self.task, self.category, self.monitors, self.server, self.time, self.date_added, self.date_completed, self.status, self.position)
+        return "({},{},{},{},{},{},{},{},{},{})".format(self.task, self.category, self.mltype,self.monitors, self.server, self.time, self.date_added, self.date_completed, self.status, self.position)
 
 
