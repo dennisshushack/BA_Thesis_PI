@@ -16,7 +16,6 @@ echo "Services copied to /etc/systemd/system/"
 echo "Services reloaded"
 
 # Creates the .env file for the 3rd monitor:
-ls -lah
 apt install python3-venv -y
 cd ..
 cd monitor1
