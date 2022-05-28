@@ -266,7 +266,6 @@ def send_delete(server, directory):
     click.echo("Sending data to server  for monitor {}...".format(directory))
     # Send all files located in the directory to the server
     os.system("rsync -vr /tmp/monitors/{directory}/ {server}/{directory} > /dev/null".format(server=server, directory=directory))
-    # os.system("rm -rf /tmp/monitors/{directory}/*".format(directory=directory))
     click.echo("Data sent to server and deleted from local directory")
 
 def send_data(server, services):
