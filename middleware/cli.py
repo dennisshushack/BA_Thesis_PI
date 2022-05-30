@@ -4,6 +4,8 @@ import time
 import logging
 import socket
 import threading
+import requests 
+from requests.auth import HTTPBasicAuth
 from array import array
 from re import ASCII 
 from tabulate import tabulate
@@ -21,12 +23,13 @@ def cli():
 # A cli_tools command that adds a todo to the database.
 @cli.command(name='add',help="Adds a todo to the database.")
 @click.option('--task', '-d', prompt='normal, ransom1, ransom2 or ransom3:', type=click.Choice(['normal','ransom1', 'ransom2', 'ransom3']))
-@click.option('--category', '-c',prompt='testing or training:', type=click.Choice(['training','testing']))
+@click.option('--category', '-c',prompt='testing ,training or collection:', type=click.Choice(['training','testing', 'collection']))
 @click.option('--time', '-t', type=int, prompt='time in seconds:', default=3600, help="Time in seconds.")
 @click.option('--monitors', '-m', prompt='monitors (i.e m1,m2,m3):', help="Comma separated list of monitors.")
 @click.option('--server', '-s', prompt='Server path (i.e root@194.233.160.46:/root/data):', help="Server path.")
 @click.option('--mltype', '-c',prompt='anomaly or classification:', type=click.Choice(['anomaly','classification']))
-def add_todo(task, category ,time, monitors,server, mltype):
+@click.option('--localhost', '-c',prompt='Flask application i.e 127.0.0.1:5000:', help="Localhost path.")
+def add_todo(task, category ,time, monitors,server, mltype, localhost):
     """Adds a todo to the database."""
     # First check:
     if category == 'training' and mltype == 'anomaly':
@@ -50,7 +53,7 @@ def add_todo(task, category ,time, monitors,server, mltype):
     # Checks, that time > 0
     if time > 0:
         arr_monitors, active_services = check_monitors(monitors)
-        server = create_directories_server(server, arr_monitors, category, task, mltype)
+        server, path_for_request = create_directories_server(server, arr_monitors, category, task, mltype)
         check_directories_on_device()
         replace_env(server,time)
         click.echo("Starting Monitor Services and running it for {time} seconds".format(time=time))
@@ -61,6 +64,7 @@ def add_todo(task, category ,time, monitors,server, mltype):
         start_monitor(time, position, active_services,server)
         for monitor in arr_monitors:
             send_delete(server,monitor)
+        send_request(localhost, mltype, arr_monitors, task, category, path_for_request)
         show_table()
         return
     else:
@@ -93,7 +97,6 @@ def stop_services():
     os.system("systemctl stop m2.service")
     os.system("systemctl stop m3.service")
     os.system("systemctl daemon-reload")
-
 
 
 ################ Helper Functios ################
@@ -172,12 +175,12 @@ def create_directories_server(server:str, monitors: array, category: str, task: 
     server_path = server_arr[1]
     server_ssh = server_arr[0]
     task = task.replace(" ","_")
-    # Get id of devi
     path = "{server_path}/{cpu_serial}/{mltype}/{category}/{task}".format(server_path=server_path, cpu_serial=cpu_serial, mltype=mltype, category=category, task=task)
     for monitor in monitors:
         os.system("ssh {server_ssh} mkdir -p {path}/{monitor}".format(server_ssh=server_ssh, path=path, monitor=monitor))
     new_path = server_ssh + ":" + path
-    return new_path
+    path_for_request = "{server_path}/{cpu_serial}/{mltype}/{category}".format(server_path=server_path, cpu_serial=cpu_serial, mltype=mltype, category=category)
+    return new_path, path_for_request
 
 
 def check_directories_on_device():
@@ -320,6 +323,34 @@ def wait_till_counter_starts():
             break
         else:
             time.sleep(1)
+
+def send_request(localhost: str, ml_type: str, monitors: array, behavior: str, category:str,  path: str ):
+    """
+    This function sends a request to the server:
+    :input: localhost: str , ml_type: str, monitors: array, behavior: str, path: str
+    """
+    if category == "collection":
+        return
+
+    # Gets the device serial number:
+    serial = getserial()
+
+    # Check if the server is up:
+    try:
+        # Creates a get request to endpoint localhost/test with Basic Auth user=admin and password=admin
+        response = requests.get("http://{localhost}/rest/test".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'))
+        if response.status_code == 200:
+            if category == "training":
+                # Creates a post request to endpoint localhost/train with Basic Auth user=admin and password=admin
+                response = requests.post("http://{localhost}/rest/train".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'), json={"ml_type": ml_type, "monitors": monitors, "behavior": behavior, "category": category, "path": path, "device": serial})
+            elif category == "testing":
+                # Creates a post request to endpoint localhost/test with Basic Auth user=admin and password=admin
+                response = requests.post("http://{localhost}/rest/testing".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'), json={"ml_type": ml_type, "monitors": monitors, "behavior": behavior, "category": category, "path": path, "device": serial})
+    except requests.exceptions.ConnectionError:
+        logging.debug("Server is not up, waiting for it to start...")
+        click.echo("Server is not up, waiting for it to start...")
+        return
+    click.echo("Request sent to server")
     
 if __name__ == '__main__':
     # Create log file

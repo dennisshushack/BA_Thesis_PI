@@ -17,8 +17,9 @@ apt-get update
 # apt-get upgrade -y
 echo "System updated"
 
-# Install perf on the system
+# Install perf on the system (for performance monitoring)
 apt install linux-perf -y
+echo "perf was installed"
 
 # Copies the files m1.service and m2.service and m3.service to /etc/systemd/system/:
 cd services 
@@ -48,12 +49,6 @@ chmod +x monitor.sh
 
 echo "Monitor2 and monitor3 made executable"
 
-# Create a passwordless ssh connection to a server:
-# Check if id_rsa.pub already exists
-mkdir ~/.ssh/
-ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
-ssh-copy-id -i ~/.ssh/id_rsa.pub $server
-echo "SSH connection created"
 
 
 
