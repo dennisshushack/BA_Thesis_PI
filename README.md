@@ -3,6 +3,8 @@
 
 This setup is all you need to get the PI up and running. In the subdirectories a more specific explaination is given, if the files should be run from source (python). Can be ignored otherwise.
 
+As the monitor for system calls collects a large amount of data, I suggest having a server with at minimum 200gb of file storage available.
+
 * Step 1: Flash the electrosense image on a SD card (i.e with rufus on Windows) on Linux use dd command of the unzipped file
 * Step 2: Connect via ssh. `ifconfig` can help find the IP address of the Pi
 * Step 3: ssh into the Pi
