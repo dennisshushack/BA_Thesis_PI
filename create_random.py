@@ -7,7 +7,7 @@ file_types_1 = ['.txt', '.py', '.html', '.sh' '.css', '.js','.log', '.adb', '.da
 '.flv', '.gif', '.gz', '.hqx', '.htm', '.html', '.indd', '.iso', '.jar', '.jpeg', '.jpg', '.key', '.log', '.m4a'
 '.m4v', '.mid', '.mov', '.mp3', '.mp4', '.mpg', '.odf', '.odg', '.odp', '.ods', '.odt', '.ogg', '.pdf', '.png',]
 file_types  =['.txt', '.py', '.sh']
-path = '/root/home/'
+path = '/home/'
 os.chdir(path)
 
 
