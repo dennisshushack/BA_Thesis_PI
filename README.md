@@ -1,5 +1,5 @@
 # Files of Bachelor Thesis Dennis Shushack
-# Setup the rasperry pi
+# Setup Pi
 
 * Step 1: Flash the electrosense image on a SD card (i.e with rufus on Windows) on Linux use dd command of the unzipped file
 * Step 2: Connect via ssh. `ifconfig` can help find the IP address of the Pi
@@ -18,4 +18,4 @@ chmod +x install.sh
 ./install.sh -s (username@localhost)
 ```
 
-Done!
+To start monitoring:
