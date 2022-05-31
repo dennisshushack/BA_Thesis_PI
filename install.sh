@@ -23,8 +23,7 @@ echo "SSH connection created"
 
 # Update the system and upgrade the packages
 apt-get update
-apt-get upgrade -y
-echo "System updated & Updated"
+echo "System updated"
 
 # Install perf on the system (for performance monitoring)
 apt install linux-perf -y
