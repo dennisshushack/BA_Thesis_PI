@@ -15,7 +15,7 @@ service autossh-tunnel restart
 ```
 * Step 5: Update the system `apt-get update`
 * Step 6: Install git `sudo apt-get install git`
-* Step 7: Clone this repo: git clone [https://github.com/dennisshushack/BA_Thesis_ds.git](https://github.com/dennisshushack/BA_Thesis_PI.git) to /root/
+* Step 7: Clone this repo: `git clone https://github.com/dennisshushack/BA_Thesis_ds.git` to /root/
 * Step 8: Use the provided install.sh sctript. To get the localhost use ifconfig user = defined user on system.
 ```
 cd BA_Thesis_PI
