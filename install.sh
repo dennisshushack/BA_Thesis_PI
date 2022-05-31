@@ -35,7 +35,7 @@ apt install python3-venv -y
 echo "Installed python-venv"
 
 # Install support for ExFat (SSD) can be ignored if not need:
-apt install exfat-fuse exfat-utils
+apt install exfat-fuse exfat-utils -y
 
 # Copies the files m1.service and m2.service and m3.service to /etc/systemd/system/:
 cd monitors/services
