@@ -46,7 +46,7 @@ cd BA_Thesis_PI
 chmod +x install.sh
 ./install.sh -s (username@localhost)
 or 
-./install_source.sh
+./install_source.sh -s (username@localhost)
 ```
 
 To start monitoring:
