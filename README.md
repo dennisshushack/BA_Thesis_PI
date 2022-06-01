@@ -21,8 +21,8 @@ chmod +x main
 ./main /tmp 10
 ```
 
-```
-# Setup Pi
+
+### Setup Pi
 
 This setup is all you need to get the PI up and running. In the subdirectories a more specific explaination is given on the installation steps. Can be ignored otherwise.
 
