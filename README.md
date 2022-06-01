@@ -1,7 +1,7 @@
 # Files of Bachelor Thesis Dennis Shushack
 # Setup Pi
 
-This setup is all you need to get the PI up and running. In the subdirectories a more specific explaination is given, if the files should be run from source (python). Can be ignored otherwise.
+This setup is all you need to get the PI up and running. In the subdirectories a more specific explaination is given on the installation steps. Can be ignored otherwise.
 
 As the monitor for system calls collects a large amount of data, I suggest having a server with at minimum 200gb of file storage available.
 
@@ -16,11 +16,13 @@ service autossh-tunnel restart
 * Step 5: Update the system `apt-get update`
 * Step 6: Install git `sudo apt-get install git`
 * Step 7: Clone this repo: `git clone https://github.com/dennisshushack/BA_Thesis_ds.git` to /root/
-* Step 8: Use the provided install.sh sctript. To get the localhost use ifconfig user = defined user on system.
+* Step 8: Use the provided install_source.sh or install.sh sctripts (install.sh are compiled binaries). To get the localhost use ifconfig user = defined user on system.
 ```
 cd BA_Thesis_PI
 chmod +x install.sh
 ./install.sh -s (username@localhost)
+or 
+./install_source.sh
 ```
 
 To start monitoring:
