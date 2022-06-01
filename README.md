@@ -1,8 +1,11 @@
 # Files of Bachelor Thesis Dennis Shushack
 * `/monitors`: contains the monitoring scripts
 * `/helpers`: contains a random file generator (use on SSD) and a ressource monitor as binary or py file.
+* `/middleware`: contains the actual middleware and is in charge of the monitoring scripts
+
+
 ### Ressource Monitor
-Measures CPU, Memory, Network & Reads, Writes writes them to a .csv and calculates the mean. Takes a directory + time as args.
+Measures CPU & IO : writes them to a .csv and calculates the mean. Takes a directory + time as args.
 For source:
 ```
 python3 -m venv env
