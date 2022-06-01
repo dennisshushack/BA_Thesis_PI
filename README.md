@@ -5,6 +5,7 @@
 
 
 ### Ressource Monitor
+This is not a monitoring script, but is used to evaluate how much ressources are used for training, testing models and how much ressources are used for the actual middleware.
 Measures CPU & IO : writes them to a .csv and calculates the mean. Takes a directory + time as args.
 For source:
 ```
