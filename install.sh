@@ -48,7 +48,7 @@ cd ..
 cd monitor1
 python3 -m venv env
 source env/bin/activate
-pip install -r requirements.txt
+pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt
 deactivate
 echo "Virtual environment created and requirements installed for monitor 1"
 
@@ -66,7 +66,7 @@ cd ../../
 cd middleware
 python3 -m venv env
 source env/bin/activate
-pip install tabulate requests click python-dotenv
+pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org tabulate requests click python-dotenv
 deactivate
 echo "Virtual environment created and requirements installed for middleware"
 
