@@ -38,14 +38,15 @@ apt install exfat-fuse exfat-utils -y
 
 # Copies the files m1.service and m2.service and m3.service to /etc/systemd/system/:
 cd monitors/services
-cp m1.service m2.service m3.service m3.env /etc/systemd/system/
+cp m2.service m3.service m3.env /etc/systemd/system/
+cp m1_source.service /etc/systemd/system/m1.service
 systemctl daemon-reload
 echo "Services copied to /etc/systemd/system/"
 echo "Services reloaded"
 
 # Creates the .env file for the 1st monitor and installs requirements.txt:
 cd ..
-cd monitor1
+cd monitor1/source
 python3 -m venv env
 source env/bin/activate
 pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt
@@ -53,7 +54,7 @@ deactivate
 echo "Virtual environment created and requirements installed for monitor 1"
 
 # Make monitor2 and monitor3 executable:
-cd ..
+cd ../../
 cd monitor2
 chmod +x new_sampler_50tmp.sh
 cd ..
