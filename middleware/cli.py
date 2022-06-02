@@ -21,24 +21,54 @@ def cli():
 ################ CLI Commands ################
 
 # This is for sending the data to the server:
-@cli.command(name='send', help='Send the data to the server')
-@click.option('--localhost', '-c', prompt='Flask application i.e 127.0.0.1:5000:', help="Localhost path.")
-@click.option('--task', '-t', prompt='Task name:', help="Task index i.e 1:")
-def send_date(localhost,task):
-    pass
+@cli.command(name='send', help='Send the data to the server indicate the correct task number')
+@click.option('--localhost', '-c', prompt='Flask application i.e 127.0.0.1:5000', help="Localhost path.")
+@click.option('--index', '-t', type=int,prompt='Task index', help="Task index i.e 1:")
+@click.option('--begin', '-d', prompt='Timestamp beginning (Type None if None)', help="Beginning Timestamp of your measurement", show_default=None)
+@click.option('--end', '-e', prompt='Timestamp end (Type None if None)', help="Ending timestamp of your measurement:", show_default=None)
+def send(localhost,index, begin, end):
+    # Gets all the data from the database at the given index
+    todo = get_todo(index-1)
+    if begin == "None":
+        begin = None
+    if end == "None":
+        end = None
+    # Prints the data
+    click.echo("Sending following data to server {localhost}...".format(localhost=localhost))
+    click.echo("############################################################")
+    click.echo("Task: {task}".format(task=todo.task))
+    click.echo("Description: {description}".format(description=todo.description))
+    click.echo("Server: {server}".format(server=todo.server))
+    click.echo("Path: {path}".format(path=todo.path))
+    click.echo("Monitors: {monitors}".format(monitors=todo.monitors))
+    click.echo("Category: {category}".format(category=todo.category))
+    click.echo("ML Type: {mltype}".format(mltype=todo.mltype))
+    click.echo("Beginning Timestamp: {begin}".format(begin=begin))
+    click.echo("Ending Timestamp: {end}".format(end=end))
+    click.echo("############################################################")
+
+    # Check if the server is up:
+    if check_server(localhost) == False:
+        click.echo("Server is not up!")
+        return
+    else:
+        click.echo("Server is up!")
+
+   
+    
 
 
 
 
 # A cli_tools command that adds a todo to the database.
 @cli.command(name='add',help="Adds a todo to the database.")
-@click.option('--description', '-c', prompt='Please add a short description for this task:', help="Deskription for the task.")
-@click.option('--task', '-d', prompt='normal, ransom1, ransom2 or ransom3:', type=click.Choice(['normal','ransom1', 'ransom2', 'ransom3']))
-@click.option('--category', '-c',prompt='Which category testing or training:', type=click.Choice(['training','testing']))
-@click.option('--seconds', '-t', type=int, prompt='time in seconds:', default=3600, help="Time in seconds.")
-@click.option('--monitors', '-m', prompt='Which monitors (i.e m1,m2,m3):', help="Comma separated list of monitors.")
-@click.option('--server', '-s', prompt='Server path (i.e root@194.233.160.46:/root/data):', help="Server path.")
-@click.option('--mltype', '-c',prompt='Type anomaly or classification:', type=click.Choice(['anomaly','classification']))
+@click.option('--description', '-c', prompt='Please add a short description for this task', help="Deskription for the task.")
+@click.option('--task', '-d', prompt='normal, ransom1, ransom2 or ransom3', type=click.Choice(['normal','ransom1', 'ransom2', 'ransom3']))
+@click.option('--category', '-c',prompt='Which category testing or training', type=click.Choice(['training','testing']))
+@click.option('--seconds', '-t', type=int, prompt='time in seconds', default=3600, help="Time in seconds.")
+@click.option('--monitors', '-m', prompt='Which monitors (i.e m1,m2,m3)', help="Comma separated list of monitors.")
+@click.option('--server', '-s', prompt='Server path (i.e root@194.233.160.46:/root/data)', help="Server path.")
+@click.option('--mltype', '-c',prompt='Type anomaly or classification', type=click.Choice(['anomaly','classification']))
 def add_todo(description, task, category ,seconds, monitors, server, mltype):
     """Adds a todo to the database."""
     

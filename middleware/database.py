@@ -46,6 +46,10 @@ def get_all_todos() -> List[Todo]:
         todos.append(Todo(*result))
     return todos
 
+def get_todo(position: int) -> Todo:
+    c.execute('select * from todos where position = :position', {'position': position})
+    return Todo(*c.fetchone())
+
 def delete_todo(position):
     """
     Deletes a todo from the database.
