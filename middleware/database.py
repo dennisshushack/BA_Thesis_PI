@@ -1,6 +1,6 @@
 import sqlite3
 from typing import List
-import datetime
+import time
 from model import Todo
 
 conn = sqlite3.connect('todos.db')
@@ -8,15 +8,18 @@ c = conn.cursor()
 
 def create_table():
     c.execute("""CREATE TABLE IF NOT EXISTS todos (
+            description text,
             task text,
             category text,
             mltype text,
             monitors string,
             server text,
-            time integer,
+            path text,
+            seconds integer,
             date_added integer,
             date_completed integer,
             status integer,
+            sent integer,
             position integer
             )""")
 
@@ -30,9 +33,9 @@ def insert_todo(todo: Todo):
     count = c.fetchone()[0]
     todo.position = count if count else 0
     with conn:
-        c.execute('INSERT INTO todos VALUES (:task, :category, :mltype, :monitors, :server, :time, :date_added, :date_completed, :status, :position)',
-        {'task': todo.task, 'category': todo.category, 'mltype': todo.mltype, 'monitors': todo.monitors, 'server': todo.server , 'time': todo.time, 'date_added': todo.date_added,
-         'date_completed': todo.date_completed, 'status': todo.status, 'position': todo.position })
+        c.execute('INSERT INTO todos VALUES (:description, :task, :category, :mltype, :monitors, :server,  :path, :seconds, :date_added, :date_completed, :status, :sent, :position)',
+        {'description': todo.description, 'task': todo.task, 'category': todo.category, 'mltype': todo.mltype, 'monitors': todo.monitors, 'server': todo.server , 'path': todo.path, 'seconds': todo.seconds, 'date_added': todo.date_added,
+         'date_completed': todo.date_completed, 'status': todo.status, 'sent': todo.sent, 'position': todo.position })
 
 
 def get_all_todos() -> List[Todo]:
@@ -71,10 +74,10 @@ def change_position(old_position: int, new_position: int, commit=True):
 def complete_todo(position: int):
     with conn:
         c.execute('UPDATE todos SET status = 2, date_completed = :date_completed WHERE position = :position',
-                  {'position': position, 'date_completed': datetime.datetime.now()})
+                  {'position': position, 'date_completed': round(time.time())})
 
 
 # Gets the position of the todo with the given task.
-def get_position(task: str, time: int) -> int:
-    c.execute('select position from todos where task = :task and time = :time', {'task': task, 'time': time})
+def get_position(task: str, seconds: int, description: str) -> int:
+    c.execute('select position from todos where task = :task and seconds = :seconds and description = :description', {'task': task, 'seconds': seconds, 'description':description})
     return c.fetchone()[0]
