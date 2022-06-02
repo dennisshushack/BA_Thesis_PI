@@ -20,17 +20,28 @@ def cli():
 
 ################ CLI Commands ################
 
+# This is for sending the data to the server:
+@cli.command(name='send', help='Send the data to the server')
+@click.option('--localhost', '-c', prompt='Flask application i.e 127.0.0.1:5000:', help="Localhost path.")
+@click.option('--task', '-t', prompt='Task name:', help="Task index i.e 1:")
+def send_date(localhost,task):
+    pass
+
+
+
+
 # A cli_tools command that adds a todo to the database.
 @cli.command(name='add',help="Adds a todo to the database.")
+@click.option('--description', '-c', prompt='Please add a short description for this task:', help="Deskription for the task.")
 @click.option('--task', '-d', prompt='normal, ransom1, ransom2 or ransom3:', type=click.Choice(['normal','ransom1', 'ransom2', 'ransom3']))
-@click.option('--category', '-c',prompt='testing ,training or collection:', type=click.Choice(['training','testing', 'collection']))
-@click.option('--time', '-t', type=int, prompt='time in seconds:', default=3600, help="Time in seconds.")
-@click.option('--monitors', '-m', prompt='monitors (i.e m1,m2,m3):', help="Comma separated list of monitors.")
+@click.option('--category', '-c',prompt='Which category testing or training:', type=click.Choice(['training','testing']))
+@click.option('--seconds', '-t', type=int, prompt='time in seconds:', default=3600, help="Time in seconds.")
+@click.option('--monitors', '-m', prompt='Which monitors (i.e m1,m2,m3):', help="Comma separated list of monitors.")
 @click.option('--server', '-s', prompt='Server path (i.e root@194.233.160.46:/root/data):', help="Server path.")
-@click.option('--mltype', '-c',prompt='anomaly or classification:', type=click.Choice(['anomaly','classification']))
-@click.option('--localhost', '-c',prompt='Flask application i.e 127.0.0.1:5000:', help="Localhost path.")
-def add_todo(task, category ,time, monitors,server, mltype, localhost):
+@click.option('--mltype', '-c',prompt='Type anomaly or classification:', type=click.Choice(['anomaly','classification']))
+def add_todo(description, task, category ,seconds, monitors, server, mltype):
     """Adds a todo to the database."""
+    
     # First check:
     if category == 'training' and mltype == 'anomaly':
         if task in ['ransom1', 'ransom2', 'ransom3']:
@@ -51,20 +62,21 @@ def add_todo(task, category ,time, monitors,server, mltype, localhost):
         return
 
     # Checks, that time > 0
-    if time > 0:
+    if seconds > 0:
         arr_monitors, active_services = check_monitors(monitors)
-        server, path_for_request = create_directories_server(server, arr_monitors, category, task, mltype)
+        server, path_for_request = create_directories_server(description, server, arr_monitors, category, task, mltype)
         check_directories_on_device()
-        replace_env(server,time)
-        click.echo("Starting Monitor Services and running it for {time} seconds".format(time=time))
-        logging.info("Starting Monitor Services and running it for {time} seconds".format(time=time))
-        todo = Todo(task, category, mltype, monitors, server ,time)
+        replace_env(server,seconds)
+        click.echo("Starting Monitor Services and running it for {seconds} seconds".format(seconds=seconds))
+        logging.info("Starting Monitor Services and running it for {seconds} seconds".format(seconds=seconds))
+        todo = Todo(description, task, category, mltype, monitors, server, path_for_request, seconds)
         insert_todo(todo)
-        position = get_position(task, time)
-        start_monitor(time, position, active_services,server)
+        position = get_position(task, seconds, description)
+        error = start_monitor(seconds, position, active_services,server)
+        if error:
+            return
         for monitor in arr_monitors:
             send_delete(server,monitor)
-        send_request(localhost, mltype, arr_monitors, task, category, path_for_request)
         show_table()
         return
     else:
@@ -165,7 +177,7 @@ def check_monitors(monitors: str):
             return
     return array_monitors,active_services
 
-def create_directories_server(server:str, monitors: array, category: str, task: str, mltype: str):
+def create_directories_server(description: str, server:str, monitors: array, category: str, task: str, mltype: str):
     """
     Creates the directories on the server.
     """
@@ -175,7 +187,11 @@ def create_directories_server(server:str, monitors: array, category: str, task: 
     server_path = server_arr[1]
     server_ssh = server_arr[0]
     task = task.replace(" ","_")
-    path = "{server_path}/{cpu_serial}/{mltype}/{category}/{task}".format(server_path=server_path, cpu_serial=cpu_serial, mltype=mltype, category=category, task=task)
+    description = description.replace(" ","_")
+    if category == "training":
+        path = "{server_path}/{cpu_serial}/{mltype}/{category}/{task}".format(server_path=server_path, cpu_serial=cpu_serial, mltype=mltype, category=category, task=task)
+    else:
+        path = "{server_path}/{cpu_serial}/{mltype}/{category}/{description}/{task}".format(server_path=server_path, cpu_serial=cpu_serial, mltype=mltype, category=category, description=description, task=task)
     for monitor in monitors:
         os.system("ssh {server_ssh} mkdir -p {path}/{monitor}".format(server_ssh=server_ssh, path=path, monitor=monitor))
     new_path = server_ssh + ":" + path
@@ -204,7 +220,14 @@ def start_monitor(seconds: int, position: int, active_services: array, server: s
     for service in active_services:
         os.system("systemctl start {service} > /dev/null".format(service=service))
     # Wait to let all services properly start up:
-    wait_till_counter_starts()
+    error = wait_till_counter_starts()
+    if error:
+        click.echo("Error: Could not start all services!")
+        # Delete Todo at the position
+        delete_todo(position)
+        # Show table
+        show_table()
+        return error
     logging.info("Starting Monitoring")
     start = time.perf_counter()
     with click.progressbar(range(seconds)) as progress:
@@ -221,6 +244,7 @@ def start_monitor(seconds: int, position: int, active_services: array, server: s
     for service in active_services:
         os.system("systemctl stop {service} > /dev/null".format(service=service))
     complete(position)
+    return error
 
 def complete(position: int):
     """
@@ -236,13 +260,14 @@ def show_table():
     # Adds all todos to the ASCII table
     table = []
     for task in tasks:
+        sent = "Done" if task.status == 2 else "Not Done"
         is_done = "Done" if task.status == 2 else "Not Done"
-        table.append([task.position+1, task.task, task.category,task.mltype, task.monitors, str(task.time), is_done, task.date_added,task.date_completed])
-    table = tabulate(table, headers=["#", "Task", "Category", "Type", "Monitors", "Seconds", "Done","Added","Completed"], tablefmt="fancy_grid")
+        table.append([task.position+1, task.description, task.task, task.category,task.mltype, task.monitors, str(task.seconds), is_done, sent, task.date_added,task.date_completed])
+    table = tabulate(table, headers=["#", "Description", "Task", "Category", "Type", "Monitors", "Seconds", "Done", "Sent", "Added","Completed"], tablefmt="fancy_grid")
     click.echo("Table for the device with the following cpu-id: {cpu_id}".format(cpu_id=getserial()))
     click.echo(table)
 
-def replace_env(server: str ,time: int):
+def replace_env(server: str ,seconds: int):
     """
     Changes the environmental variables in m3.env and reloads the systemd service
     """
@@ -252,7 +277,7 @@ def replace_env(server: str ,time: int):
     
     # Set new Value:
     os.environ["RSYNCF"] = "{}/m3".format(server)
-    os.environ["SECONDS"] = "{}\seconds".format(str(time))
+    os.environ["SECONDS"] = "{}\seconds".format(str(seconds))
     # Write changes to .env file.
     dotenv.set_key(dotenv_file, "RSYNCF", os.environ["RSYNCF"])
     dotenv.set_key(dotenv_file, "SECONDS", os.environ["SECONDS"])
@@ -306,6 +331,8 @@ def wait_till_counter_starts():
     This function waits a certain time till the actual timer countdown starts!
     Checks if in the directories /tmp/monitors/m1 and /tmp/monitors/m2 & /tmp/monitors/m3 any files are present
     """
+    start_time = time.time()
+    error = True
     while True:
         # Check if there is a file in the directory /tmp/monitors/m1
         list_m1 = os.listdir('/tmp/monitors/m1') 
@@ -319,10 +346,17 @@ def wait_till_counter_starts():
         list_m3 = os.listdir('/tmp/monitors/m3')
         number_files_m3 = len(list_m3)
 
+        if time.time() - start_time > 60:
+            click.echo("You have been waiting for 60 seconds, there must be something wrong with your setup!")
+            break
+
         if (number_files_m1 > 0) and (number_files_m2) > 0 and (number_files_m3) > 0:
+            error = False
             break
         else:
             time.sleep(1)
+    
+    return error
 
 def send_request(localhost: str, ml_type: str, monitors: array, behavior: str, category:str,  path: str ):
     """
@@ -356,5 +390,8 @@ if __name__ == '__main__':
     # Create log file
     logging.basicConfig(filename='cli.log', level=logging.DEBUG, format='%(asctime)s:%(levelname)s:%(message)s')
     cli()
+
+
+
 
 
