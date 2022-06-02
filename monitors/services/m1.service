@@ -6,7 +6,7 @@ After=multi-user.target
 Type=simple
 Restart=on-failure
 User=root
-ExecStart=/bin/bash -c 'cd /root/BA_Thesis_ds/monitors/monitor1 && source env/bin/activate && python3 main.py'
+ExecStart=/bin/bash -c 'cd /root/BA_Thesis_PI/monitors/monitor1 && source env/bin/activate && python3 main.py'
 
 [Install]
 WantedBy=multi-user.target
