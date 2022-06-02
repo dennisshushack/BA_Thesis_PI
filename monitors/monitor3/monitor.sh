@@ -95,7 +95,8 @@ do
 	echo "Gathering Syscalls"
 	UPTIME=$(cat /proc/uptime | awk '{print $1}')
 	EPOCH=$(date +%s.%3N)
-	Date_Hourly=$(date -d @"$EPOCH" +%d-%m-%H_%M_%S)
+	# Needs to be the current timestamp
+	Date_Hourly=$(date +%s)
 		
 	perf trace -S -T -o "$RESULTS_PATH/""${Date_Hourly}".log -e !nanosleep -a -- sleep "$SLEEP"
 	echo -e "EPOCH: $EPOCH \nUPTIME:$UPTIME" >> "$RESULTS_PATH/""${Date_Hourly}".log &
