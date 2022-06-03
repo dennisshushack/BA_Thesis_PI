@@ -42,7 +42,7 @@ def send(localhost,index, begin, end):
 
     # Prints the data
     click.echo("Sending following data of device {serial} to server {localhost}...".format(serial=serial, localhost=localhost))
-    click.echo("############################################################")
+    click.echo("############################################################")so
     click.echo("Task: {task}".format(task=todo.task))
     click.echo("Description: {description}".format(description=todo.description))
     click.echo("Server: {server}".format(server=todo.server))
@@ -62,36 +62,10 @@ def send(localhost,index, begin, end):
         return
     
     # Create a request:
-    
     response = requests.post("http://{localhost}/rest/main".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'), json={"ml_type": todo.mltype, "monitors": todo.monitors, "behavior": todo.task, "category": todo.category, "path": todo.path, "device": serial, "begin": begin, "end": end})
  
-    
-
-    
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    print("Response: {response}".format(response=response))
+    return
 
 
 # A cli_tools command that adds a todo to the database.
