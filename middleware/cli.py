@@ -33,8 +33,15 @@ def send(localhost,index, begin, end):
         begin = None
     if end == "None":
         end = None
+    else:
+        begin = int(begin)
+        end = int(end)
+
+    # Gets the device serial number:
+    serial = getserial()
+
     # Prints the data
-    click.echo("Sending following data to server {localhost}...".format(localhost=localhost))
+    click.echo("Sending following data of device {serial} to server {localhost}...".format(serial=serial, localhost=localhost))
     click.echo("############################################################")
     click.echo("Task: {task}".format(task=todo.task))
     click.echo("Description: {description}".format(description=todo.description))
@@ -48,20 +55,47 @@ def send(localhost,index, begin, end):
     click.echo("############################################################")
 
     # Check if the server is up:
-    if check_server(localhost) == False:
+    try:
+        response = requests.get("http://{localhost}/rest/test".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'))
+    except:
         click.echo("Server is not up!")
         return
-    else:
-        click.echo("Server is up!")
-
-   
     
+    # Create a request:
+    
+    response = requests.post("http://{localhost}/rest/main".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'), json={"ml_type": todo.mltype, "monitors": todo.monitors, "behavior": todo.task, "category": todo.category, "path": todo.path, "device": serial, "begin": begin, "end": end})
+ 
+    
+
+    
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 # A cli_tools command that adds a todo to the database.
-@cli.command(name='add',help="Adds a todo to the database.")
+@cli.command(name='collect',help="Starts the monitoring process.")
 @click.option('--description', '-c', prompt='Please add a short description for this task', help="Deskription for the task.")
 @click.option('--task', '-d', prompt='normal, ransom1, ransom2 or ransom3', type=click.Choice(['normal','ransom1', 'ransom2', 'ransom3']))
 @click.option('--category', '-c',prompt='Which category testing or training', type=click.Choice(['training','testing']))
