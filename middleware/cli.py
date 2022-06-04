@@ -42,7 +42,7 @@ def send(localhost,index, begin, end):
 
     # Prints the data
     click.echo("Sending following data of device {serial} to server {localhost}...".format(serial=serial, localhost=localhost))
-    click.echo("############################################################")so
+    click.echo("############################################################")
     click.echo("Task: {task}".format(task=todo.task))
     click.echo("Description: {description}".format(description=todo.description))
     click.echo("Server: {server}".format(server=todo.server))
@@ -62,16 +62,15 @@ def send(localhost,index, begin, end):
         return
     
     # Create a request:
-    response = requests.post("http://{localhost}/rest/main".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'), json={"ml_type": todo.mltype, "monitors": todo.monitors, "behavior": todo.task, "category": todo.category, "path": todo.path, "device": serial, "begin": begin, "end": end})
- 
-    print("Response: {response}".format(response=response))
+    response = requests.post("http://{localhost}/rest/main".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'), json={"ml_type": todo.mltype, "experiment": todo.description, "monitors": todo.monitors, "behavior": todo.task, "category": todo.category, "path": todo.path, "device": serial, "begin": begin, "end": end})
+    click.echo("Please go")
     return
 
 
 # A cli_tools command that adds a todo to the database.
 @cli.command(name='collect',help="Starts the monitoring process.")
 @click.option('--description', '-c', prompt='Please add a short description for this task', help="Deskription for the task.")
-@click.option('--task', '-d', prompt='normal, ransom1, ransom2 or ransom3', type=click.Choice(['normal','ransom1', 'ransom2', 'ransom3']))
+@click.option('--task', '-d', prompt='normal, poc, dark or raas', type=click.Choice(['normal','poc', 'dark', 'raas']))
 @click.option('--category', '-c',prompt='Which category testing or training', type=click.Choice(['training','testing']))
 @click.option('--seconds', '-t', type=int, prompt='time in seconds', default=3600, help="Time in seconds.")
 @click.option('--monitors', '-m', prompt='Which monitors (i.e m1,m2,m3)', help="Comma separated list of monitors.")
