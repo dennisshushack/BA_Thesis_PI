@@ -18,7 +18,7 @@ timeAcumulative=0
 
 #	Final and temporal output files
 finalOutput="/tmp/monitors/m2/m2_$(date +'%Y-%m-%d-%H-%M')_${timeWindowSeconds}s.csv"
-tempOutput=temp
+tempOutput=/tmp/temp
 
 ##############################################################
 #############		  OUTPUT FORMATTING  		##############
