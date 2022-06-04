@@ -378,6 +378,10 @@ def wait_till_counter_starts():
 
         if time.time() - start_time > 60:
             click.echo("You have been waiting for 60 seconds, there must be something wrong with your setup!")
+            click.echo("Stopping Services if they are still running...")
+            os.system("systemctl stop m1.service > /dev/null")
+            os.system("systemctl stop m2.service > /dev/null")
+            os.system("systemctl stop m3.service > /dev/null")
             break
 
         if (number_files_m1 > 0) and (number_files_m2) > 0 and (number_files_m3) > 0:
