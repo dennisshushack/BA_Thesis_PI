@@ -265,7 +265,7 @@ def start_monitor(seconds: int, position: int, active_services: array, server: s
     with click.progressbar(range(seconds)) as progress:
         for value in progress:
             time.sleep(1)
-            if (total % 10 == 0) and (total != 0):
+            if (total % 15 == 0) and (total != 0):
                 t1 = threading.Thread(target=thread_work, args=(server,active_services))
                 t1.start()
             total += 1
