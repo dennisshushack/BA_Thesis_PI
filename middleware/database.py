@@ -3,7 +3,7 @@ from typing import List
 import time
 from model import Todo
 
-conn = sqlite3.connect('todos.db')
+conn = sqlite3.connect('/tmp/todos.db')
 c = conn.cursor()
 
 def create_table():
