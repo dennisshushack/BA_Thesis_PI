@@ -1,7 +1,6 @@
 import click
 import os
 import time
-import logging
 import socket
 import threading
 import requests 
@@ -94,7 +93,6 @@ def add_todo(description, task, category ,seconds, monitors, server, mltype):
     # Checks if the connection to the server works or not:
     if check_server(server) == False:
         click.echo("The server is not reachable. Please check the path.")
-        logging.debug("The server is not reachable. Please check the path.")
         return
 
     # Checks, that time > 0
@@ -104,7 +102,6 @@ def add_todo(description, task, category ,seconds, monitors, server, mltype):
         check_directories_on_device()
         replace_env(server,seconds)
         click.echo("Starting Monitor Services and running it for {seconds} seconds".format(seconds=seconds))
-        logging.info("Starting Monitor Services and running it for {seconds} seconds".format(seconds=seconds))
         todo = Todo(description, task, category, mltype, monitors, server, path_for_request, seconds)
         insert_todo(todo)
         position = get_position(task, seconds, description)
@@ -264,7 +261,6 @@ def start_monitor(seconds: int, position: int, active_services: array, server: s
         # Show table
         show_table()
         return error
-    logging.info("Starting Monitoring")
     start = time.perf_counter()
     with click.progressbar(range(seconds)) as progress:
         for value in progress:
@@ -276,7 +272,6 @@ def start_monitor(seconds: int, position: int, active_services: array, server: s
     finish = time.perf_counter()
     actual_running_time = round(finish-start, 2)
     click.echo("Finished montioring for {total} seconds.".format(total=actual_running_time))
-    logging.info("Finished montioring for {total} seconds.".format(total=actual_running_time))
     for service in active_services:
         os.system("systemctl stop {service} > /dev/null".format(service=service))
     complete(position)
@@ -350,7 +345,6 @@ def check_services(services):
         status = os.system('systemctl is-active --quiet {service}'.format(service=service))
         if status != 0:
             os.system("systemctl restart {service} > /dev/null".format(service=service))
-            logging.debug("Restarted service {}".format(service))
 
 
 def thread_work(server: str, active_services: array):
@@ -417,14 +411,11 @@ def send_request(localhost: str, ml_type: str, monitors: array, behavior: str, c
                 # Creates a post request to endpoint localhost/test with Basic Auth user=admin and password=admin
                 response = requests.post("http://{localhost}/rest/testing".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'), json={"ml_type": ml_type, "monitors": monitors, "behavior": behavior, "category": category, "path": path, "device": serial})
     except requests.exceptions.ConnectionError:
-        logging.debug("Server is not up, waiting for it to start...")
         click.echo("Server is not up, waiting for it to start...")
         return
     click.echo("Request sent to server")
     
 if __name__ == '__main__':
-    # Create log file
-    logging.basicConfig(filename='cli.log', level=logging.DEBUG, format='%(asctime)s:%(levelname)s:%(message)s')
     cli()
 
 
