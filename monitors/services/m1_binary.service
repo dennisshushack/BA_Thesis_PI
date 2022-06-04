@@ -6,6 +6,7 @@ After=multi-user.target
 Type=simple
 Restart=on-failure
 User=root
+WorkingDirectory=BA_Thesis_ds/monitors/monitor1/binary
 ExecStart=/root/BA_Thesis_ds/monitors/monitor1/binary/main
 
 
