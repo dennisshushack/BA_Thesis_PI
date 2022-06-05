@@ -6,8 +6,8 @@ After=multi-user.target
 Type=simple
 Restart=on-failure
 User=root
-WorkingDirectory=/root/BA_Thesis_ds/monitors/monitor1/binary
-ExecStart=/root/BA_Thesis_ds/monitors/monitor1/binary/main
+WorkingDirectory=/root/BA_Thesis_PI/monitors/monitor1/binary
+ExecStart=/root/BA_Thesis_PI/monitors/monitor1/binary/main
 
 
 [Install]
