@@ -356,7 +356,7 @@ def thread_work(server: str, active_services: array):
     send_data(server, active_services)
     check_services(active_services)
 
-def wait_till_counter_starts():
+def wait_till_counter_starts(active_services: list):
     """
     This function waits a certain time till the actual timer countdown starts!
     Checks if in the directories /tmp/monitors/m1 and /tmp/monitors/m2 & /tmp/monitors/m3 any files are present
@@ -364,17 +364,14 @@ def wait_till_counter_starts():
     start_time = time.time()
     error = True
     while True:
-        # Check if there is a file in the directory /tmp/monitors/m1
-        list_m1 = os.listdir('/tmp/monitors/m1') 
-        number_files_m1 = len(list_m1)
-        
-        # Check if there is a file in the directory /tmp/monitors/m2
-        list_m2 = os.listdir('/tmp/monitors/m2') 
-        number_files_m2 = len(list_m2)
 
-        # Check if there is a file in the directory /tmp/monitors/m3
-        list_m3 = os.listdir('/tmp/monitors/m3')
-        number_files_m3 = len(list_m3)
+        list_of_file_numbers = []
+
+        # Check if the files are present in the directories:
+        for service in active_services:
+            monitor = service.split(".")[0]
+            list_of_file_numbers.append(len(os.listdir("/tmp/monitors/{monitor}".format(monitor=monitor))))
+      
 
         if time.time() - start_time > 60:
             click.echo("You have been waiting for 60 seconds, there must be something wrong with your setup!")
@@ -384,7 +381,8 @@ def wait_till_counter_starts():
             os.system("systemctl stop m3.service > /dev/null")
             break
 
-        if (number_files_m1 > 0) and (number_files_m2) > 0 and (number_files_m3) > 0:
+        # Checks if all numbers in the list_of_file_numbers are > 0:
+        if all(x > 0 for x in list_of_file_numbers):
             error = False
             break
         else:
@@ -392,32 +390,6 @@ def wait_till_counter_starts():
     
     return error
 
-def send_request(localhost: str, ml_type: str, monitors: array, behavior: str, category:str,  path: str ):
-    """
-    This function sends a request to the server:
-    :input: localhost: str , ml_type: str, monitors: array, behavior: str, path: str
-    """
-    if category == "collection":
-        return
-
-    # Gets the device serial number:
-    serial = getserial()
-
-    # Check if the server is up:
-    try:
-        # Creates a get request to endpoint localhost/test with Basic Auth user=admin and password=admin
-        response = requests.get("http://{localhost}/rest/test".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'))
-        if response.status_code == 200:
-            if category == "training":
-                # Creates a post request to endpoint localhost/train with Basic Auth user=admin and password=admin
-                response = requests.post("http://{localhost}/rest/train".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'), json={"ml_type": ml_type, "monitors": monitors, "behavior": behavior, "category": category, "path": path, "device": serial})
-            elif category == "testing":
-                # Creates a post request to endpoint localhost/test with Basic Auth user=admin and password=admin
-                response = requests.post("http://{localhost}/rest/testing".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'), json={"ml_type": ml_type, "monitors": monitors, "behavior": behavior, "category": category, "path": path, "device": serial})
-    except requests.exceptions.ConnectionError:
-        click.echo("Server is not up, waiting for it to start...")
-        return
-    click.echo("Request sent to server")
     
 if __name__ == '__main__':
     cli()
