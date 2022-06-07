@@ -265,7 +265,7 @@ def start_monitor(seconds: int, position: int, active_services: array, server: s
     with click.progressbar(range(seconds)) as progress:
         for value in progress:
             time.sleep(1)
-            if (total % 20 == 0) and (total != 0):
+            if (total % 3600 == 0) and (total != 0):
                 t1 = threading.Thread(target=thread_work, args=(server,active_services, total))
                 t1.start()
             total += 1
@@ -335,7 +335,7 @@ def send_data(server, services):
     monitors = []
     for service in services:
         monitor = service.split(".")[0]
-        os.system("rsync -vr /tmp/monitors/{monitor}/ {server}/{monitor} > /dev/null".format(monitor=monitor, server=server))
+        os.system("rsync -r /tmp/monitors/{monitor}/{server}/{monitor} > /dev/null".format(monitor=monitor, server=server))
 
 def check_services(services):
     """
@@ -354,10 +354,9 @@ def thread_work(server: str, active_services: array, total: int):
     2. It checks all 60 seconds if the services are still running and restarts them if needed
     """
     # Send data every 20 seconds:
-    send_data(server, active_services)
+    # send_data(server, active_services)
     # Check services every hour:
-    if total % 3600 == 0:
-        check_services(active_services)
+    check_services(active_services)
 
 def wait_till_counter_starts(active_services: list):
     """
