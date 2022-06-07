@@ -25,9 +25,6 @@ echo "SSH connection created"
 apt-get update
 echo "System updated"
 
-# Install Screen:
-apt-get install screen -y
-
 # Install perf on the system (for performance monitoring)
 apt install linux-perf -y
 echo "perf was installed"
