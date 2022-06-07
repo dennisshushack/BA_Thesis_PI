@@ -265,8 +265,8 @@ def start_monitor(seconds: int, position: int, active_services: array, server: s
     with click.progressbar(range(seconds)) as progress:
         for value in progress:
             time.sleep(1)
-            if (total % 1800 == 0) and (total != 0):
-                t1 = threading.Thread(target=thread_work, args=(server,active_services))
+            if (total % 20 == 0) and (total != 0):
+                t1 = threading.Thread(target=thread_work, args=(server,active_services, total))
                 t1.start()
             total += 1
     finish = time.perf_counter()
@@ -347,14 +347,17 @@ def check_services(services):
             os.system("systemctl restart {service} > /dev/null".format(service=service))
 
 
-def thread_work(server: str, active_services: array):
+def thread_work(server: str, active_services: array, total: int):
     """
     This is the thread that runs concurrently to the for loop
     1. It sends the data of monitor m1 & m2 all 60 seconds to the server
     2. It checks all 60 seconds if the services are still running and restarts them if needed
     """
-    # send_data(server, active_services)
-    check_services(active_services)
+    # Send data every 20 seconds:
+    send_data(server, active_services)
+    # Check services every hour:
+    if total % 3600 == 0:
+        check_services(active_services)
 
 def wait_till_counter_starts(active_services: list):
     """
