@@ -265,7 +265,7 @@ def start_monitor(seconds: int, position: int, active_services: array, server: s
     with click.progressbar(range(seconds)) as progress:
         for value in progress:
             time.sleep(1)
-            if (total % 15 == 0) and (total != 0):
+            if (total % 1800 == 0) and (total != 0):
                 t1 = threading.Thread(target=thread_work, args=(server,active_services))
                 t1.start()
             total += 1
@@ -353,7 +353,7 @@ def thread_work(server: str, active_services: array):
     1. It sends the data of monitor m1 & m2 all 60 seconds to the server
     2. It checks all 60 seconds if the services are still running and restarts them if needed
     """
-    send_data(server, active_services)
+    # send_data(server, active_services)
     check_services(active_services)
 
 def wait_till_counter_starts(active_services: list):
