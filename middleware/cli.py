@@ -253,7 +253,7 @@ def start_monitor(seconds: int, position: int, active_services: array, server: s
     for service in active_services:
         os.system("systemctl start {service} > /dev/null".format(service=service))
     # Wait to let all services properly start up:
-    error = wait_till_counter_starts()
+    error = wait_till_counter_starts(active_services=active_services)
     if error:
         click.echo("Error: Could not start all services!")
         # Delete Todo at the position
