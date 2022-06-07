@@ -353,9 +353,8 @@ def thread_work(server: str, active_services: array, total: int):
     1. It sends the data of monitor m1 & m2 all 60 seconds to the server
     2. It checks all 60 seconds if the services are still running and restarts them if needed
     """
-    # Send data every 20 seconds:
-    # send_data(server, active_services)
-    # Check services every hour:
+    # Send data every hour:
+    send_data(server, active_services)
     check_services(active_services)
 
 def wait_till_counter_starts(active_services: list):
