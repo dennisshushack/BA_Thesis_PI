@@ -335,7 +335,7 @@ def send_data(server, services):
     monitors = []
     for service in services:
         monitor = service.split(".")[0]
-        os.system("rsync -r /tmp/monitors/{monitor}/{server}/{monitor} > /dev/null".format(monitor=monitor, server=server))
+        os.system("rsync -r /tmp/monitors/{monitor}/ {server}/{monitor} > /dev/null".format(monitor=monitor, server=server))
 
 def check_services(services):
     """
