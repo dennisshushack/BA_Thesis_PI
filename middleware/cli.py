@@ -130,19 +130,6 @@ def show():
     """    
     show_table()
 
-@cli.command(name='status_services', help="See the status of the monitoring systemd services")
-def status_services():
-    os.system("systemctl status m1.service")
-    os.system("systemctl status m2.service")
-    os.system("systemctl status m3.service")
-
-@cli.command(name='stop_services', help="Stop all services")
-def stop_services():
-    os.system("systemctl stop m1.service")
-    os.system("systemctl stop m2.service")
-    os.system("systemctl stop m3.service")
-    os.system("systemctl daemon-reload")
-
 
 ################ Helper Functios ################
 
@@ -265,7 +252,7 @@ def start_monitor(seconds: int, position: int, active_services: array, server: s
     with click.progressbar(range(seconds)) as progress:
         for value in progress:
             time.sleep(1)
-            if (total % 3600 == 0) and (total != 0):
+            if (total % 10 == 0) and (total != 0):
                 t1 = threading.Thread(target=thread_work, args=(server,active_services, total))
                 t1.start()
             total += 1
@@ -329,13 +316,14 @@ def send_delete(server, directory):
 
 def send_data(server, services):
     """
-    This sends the data from m1 & m2 to the server every 60 seconds, just to make sure it does 
+    This sends the data from m1 & m2 to the server every 10 seconds, just to make sure it does 
     not get lost, through ransomware or a shutdown of the device.
     """
     monitors = []
     for service in services:
         monitor = service.split(".")[0]
-        os.system("rsync -r /tmp/monitors/{monitor}/ {server}/{monitor} > /dev/null".format(monitor=monitor, server=server))
+        if monitor != "m3":
+            os.system("rsync -r /tmp/monitors/{monitor}/ {server}/{monitor} > /dev/null".format(monitor=monitor, server=server))
 
 def check_services(services):
     """
@@ -350,8 +338,8 @@ def check_services(services):
 def thread_work(server: str, active_services: array, total: int):
     """
     This is the thread that runs concurrently to the for loop
-    1. It sends the data of monitor m1 & m2 all 60 seconds to the server
-    2. It checks all 60 seconds if the services are still running and restarts them if needed
+    1. It sends the data of monitor m1 & m2 all 10 seconds to the server
+    2. It checks all 10 seconds if the services are still running and restarts them if needed
     """
     # Send data every hour:
     send_data(server, active_services)
