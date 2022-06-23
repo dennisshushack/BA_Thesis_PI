@@ -319,7 +319,6 @@ def send_data(server, services):
     This sends the data from m1 & m2 to the server every 10 seconds, just to make sure it does 
     not get lost, through ransomware or a shutdown of the device.
     """
-    monitors = []
     for service in services:
         monitor = service.split(".")[0]
         if monitor != "m3":
