@@ -10,6 +10,7 @@ from re import ASCII
 from tabulate import tabulate
 from model import *
 from database import *
+import random
 import dotenv
 
 @click.group()
@@ -105,6 +106,7 @@ def live(localhost, server, monitors, seconds):
 
     # Start the monitoring:
     total = 0
+    start_index = 5
     for service in active_services:
         os.system("systemctl start {service} > /dev/null".format(service=service))
     click.echo("Starting all systemd services...")
@@ -118,14 +120,17 @@ def live(localhost, server, monitors, seconds):
             if (total % 10 == 0) and (total != 0):
                 t1 = threading.Thread(target=thread_work, args=(server,active_services, total))
                 t1.start()
+                response = requests.post("http://{localhost}/rest/main".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'), json={"experiment": description, "monitors": monitors, "path": path_for_request, "device": cpu_serial})
             total += 1
     finish = time.perf_counter()
     actual_running_time = round(finish-start, 2)
     click.echo("Finished montioring for {total} seconds.".format(total=actual_running_time))
     for service in active_services:
         os.system("systemctl stop {service} > /dev/null".format(service=service))
-    complete(position)
-    return error
+    click.echo("Stopped all systemd services...")
+    click.echo("Done monitoring!")
+    return
+    
 
 # A cli_tools command that adds a todo to the database.
 @cli.command(name='collect',help="Starts the monitoring process.")
