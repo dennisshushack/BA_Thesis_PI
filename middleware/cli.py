@@ -74,7 +74,7 @@ def live(localhost, server, monitors):
     # Default 1 hour monitoring:
     seconds = 3600
     category = "testing"
-    mltype = "live"
+    mltype = "livetesting"
     if not check_server(server):
         click.echo("SSH connection is not working!")
         return
@@ -97,9 +97,9 @@ def live(localhost, server, monitors):
     description = 'live' 
     path = "{server_path}/{cpu_serial}/{mltype}/{category}/{description}/{task}".format(server_path=server_path, cpu_serial=cpu_serial, mltype=mltype, category=category, description=description, task=task)
 
-    for monitor in monitors:
+    for monitor in arr_monitors:
         os.system("ssh {server_ssh} mkdir -p {path}/{monitor}".format(server_ssh=server_ssh, path=path, monitor=monitor))
-    new_path = server_ssh + ":" + path
+    server = server_ssh + ":" + path
     path_for_request = "{server_path}/{cpu_serial}/{mltype}/{category}".format(server_path=server_path, cpu_serial=cpu_serial, mltype=mltype, category=category)
     check_directories_on_device()
     replace_env(server,seconds)
