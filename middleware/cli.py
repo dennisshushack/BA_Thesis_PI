@@ -120,7 +120,7 @@ def live(localhost, server, monitors, seconds):
             if (total % 10 == 0) and (total != 0):
                 t1 = threading.Thread(target=thread_work, args=(server,active_services, total))
                 t1.start()
-                response = requests.post("http://{localhost}/rest/main".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'), json={"experiment": description, "monitors": monitors, "path": path_for_request, "device": cpu_serial})
+                response = requests.post("http://{localhost}/rest/live".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'), json={"experiment": description, "monitors": monitors, "path": path_for_request, "device": cpu_serial})
             total += 1
     finish = time.perf_counter()
     actual_running_time = round(finish-start, 2)
