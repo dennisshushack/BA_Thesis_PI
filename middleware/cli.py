@@ -70,7 +70,7 @@ def send(localhost,index, begin, end):
 @click.option('--localhost', '-c', prompt='Flask application i.e 127.0.0.1:5000', help="Localhost path.")
 @click.option('--server', '-s', prompt='Server path (i.e root@194.233.160.46:/root/data)', help="Server path.")
 @click.option('--monitors', '-m', prompt='Which monitors (i.e m1,m2,m3)', help="Comma separated list of monitors.")
-def live(localhost, server, monitors, seconds):
+def live(localhost, server, monitors):
     # Default 1 hour monitoring:
     seconds = 3600
     category = "testing"
