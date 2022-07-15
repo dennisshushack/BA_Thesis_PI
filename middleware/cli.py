@@ -72,64 +72,7 @@ def send(localhost,index, begin, end):
 @click.option('--monitors', '-m', prompt='Which monitors (i.e m1,m2,m3)', help="Comma separated list of monitors.")
 def live(localhost, server, monitors):
     # Default 1 hour monitoring:
-    seconds = 3600
-    category = "testing"
-    mltype = "livetesting"
-    if not check_server(server):
-        click.echo("SSH connection is not working!")
-        return
-    
-    # Check if the server is up:
-    try:
-        response = requests.get("http://{localhost}/rest/test".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'))
-    except:
-        click.echo("Flask Server is not up!")
-        return
-
-    arr_monitors, active_services = check_monitors(monitors)
-    # Gets the CPU Serial 
-    cpu_serial = getserial()
-    server_arr = server.split(':')
-    server_path = server_arr[1]
-    server_ssh = server_arr[0]
-    random_number = random.randint(1, 100000)
-    task = "live" + str(random_number)
-    description = 'live' 
-    path = "{server_path}/{cpu_serial}/{mltype}/{category}/{description}/{task}".format(server_path=server_path, cpu_serial=cpu_serial, mltype=mltype, category=category, description=description, task=task)
-
-    for monitor in arr_monitors:
-        os.system("ssh {server_ssh} mkdir -p {path}/{monitor}".format(server_ssh=server_ssh, path=path, monitor=monitor))
-    server = server_ssh + ":" + path
-    path_for_request = "{server_path}/{cpu_serial}/{mltype}/{category}".format(server_path=server_path, cpu_serial=cpu_serial, mltype=mltype, category=category)
-    check_directories_on_device()
-    replace_env(server,seconds)
-
-    # Start the monitoring:
-    total = 0
-    start_index = 5
-    for service in active_services:
-        os.system("systemctl start {service} > /dev/null".format(service=service))
-    click.echo("Starting all systemd services...")
-    click.echo("Please wait for 60 seconds to ensure the services are started...")
-    time.sleep(60)
-    click.echo("Thanks for waiting :D...")
-    start = time.perf_counter()
-    with click.progressbar(range(seconds)) as progress:
-        for value in progress:
-            time.sleep(1)
-            if (total % 10 == 0) and (total != 0):
-                t1 = threading.Thread(target=thread_work, args=(server,active_services, total))
-                t1.start()
-                response = requests.post("http://{localhost}/rest/live".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'), json={"experiment": description, "monitors": monitors, "path": path_for_request, "device": cpu_serial})
-            total += 1
-    finish = time.perf_counter()
-    actual_running_time = round(finish-start, 2)
-    click.echo("Finished montioring for {total} seconds.".format(total=actual_running_time))
-    for service in active_services:
-        os.system("systemctl stop {service} > /dev/null".format(service=service))
-    click.echo("Stopped all systemd services...")
-    click.echo("Done monitoring!")
-    return
+ 
     
 
 # A cli_tools command that adds a todo to the database.
