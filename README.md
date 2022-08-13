@@ -13,6 +13,7 @@ If you have any troubles installing the Monitor Controller or other parts of the
 It is **highly** suggested to have a Linux or BSD based operating system running on your main machine. Mac OS should also work fine.
 Windows on the other hand can be troublesome. If you run a Windows distribution, please consider dualbooting or installing a distro on an external SSD i.e. Ubuntu. It is also recommendet to have your machine connected via LAN and not WIFI, due to Network drops.
 
+
 # Monitor Controller Instalation:
 
 ## Prerequisite:
@@ -61,7 +62,6 @@ chmod +x install_source.sh
 
 # Run installer script (User will be prompted to enter his password)
 ./install_source.sh -s username@serveripaddress
-
 ```
 
 
