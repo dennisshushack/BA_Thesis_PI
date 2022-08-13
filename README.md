@@ -60,7 +60,7 @@ chmod +x install_source.sh
 # Run installer script (User will be prompted to enter his password)
 ./install_source.sh -s username@serveripaddress
 
-``
+```
 
 
 
