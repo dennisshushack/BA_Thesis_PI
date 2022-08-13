@@ -20,7 +20,7 @@ Windows on the other hand can be troublesome. If you run a Windows distribution,
 You should have an ElectroSense sensor deployed and can SSH into it. 
 You have a Linux/BSD based operating system running on your machine.
 
-### Enabling SSH 
+### Enabling SSH on Desktop/Server
 You will need to enable SSH on your main machine. That way the sensor can rsync the data monitored to your device. Depending on the choosen operating system this step may vary. Assuming a Debian-based OS i.e. Ubuntu execute the following commands:
 ```
 sudo apt-get install openssh-server
@@ -37,6 +37,11 @@ You should now be able to SSH into your machine usining `ssh yourusername@PCIpAd
 sudo apt-get install net-tools
 ifconfig
 ```
+
+## Installation of the Monitor Controller on the Raspberry PI:
+
+
+
 
 
 
