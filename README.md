@@ -1,10 +1,11 @@
-# Files of Bachelor Thesis Dennis Shushack
-* `/monitors`: contains the monitoring scripts
-* `/helpers`: contains a random file generator (use on SSD) and a ressource monitor as binary or py file.
-* `/middleware`: contains the actual middleware and is in charge of the monitoring scripts
+# Monitor Controller File structure:
+* `/monitors`: contains the monitoring scripts (RES, KERN and SYS)
+* `/helpers`: contain the randomfile generator and ressource (CPU & Memory measuring script)
+* `/middleware`: contains the actual middleware and controlls the monitoring scripts (KERN, RES and SYS)
+* install_source.sh: To install all needed dependencies
 
 
-### Ressource Monitor
+### Monitor Controller Instalation:
 This is not a monitoring script, but is used to evaluate how much ressources are used for training, testing models and how much ressources are used for the actual middleware.
 Measures CPU & IO : writes them to a .csv and calculates the mean. Takes a directory + time as args.
 For source:
