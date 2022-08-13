@@ -32,9 +32,10 @@ To check if the openssh-server is running use the following command:
 ```
 sudo systemctl status ssh
 ```
-You should now be able to SSH into your machine usining `yourusername@PCIpAddress`. You can get your ip using the following instructions:
+You should now be able to SSH into your machine usining `ssh yourusername@PCIpAddress`. You can get your ip using the following instructions:
 ```
-
+sudo apt-get install net-tools
+ifconfig
 ```
 
 
