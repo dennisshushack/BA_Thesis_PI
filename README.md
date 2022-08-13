@@ -1,6 +1,6 @@
 # Monitor Controller Repository File structure:
 * `/monitors`: contains the monitoring scripts (RES, KERN and SYS)
-* `/helpers`: contain the randomfile generator and ressource (CPU & Memory measuring script) with instructions
+* `/helpers`: contain the randomfile generator and ressource monitor (CPU & Memory measuring script) with instructions
 * `/middleware`: contains the actual middleware and controlls the monitoring scripts (KERN, RES and SYS)
 * `install_source.sh`: To install all needed dependencies
 
