@@ -7,6 +7,8 @@
 This Repository is part of the thesis: 
 Intelligent Framework to Detect Ransomware Affecting Linux-based and Resource-constrained Devices
 
+If you have any troubles installing the Monitor Controller or other parts of the system feel free to contact me: dennis.shushack@uzh.ch
+
 
 
 It is **highly** suggested to have a Linux or BSD based operating system running on your main machine. Mac OS should also work fine.
