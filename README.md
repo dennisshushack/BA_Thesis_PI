@@ -1,27 +1,31 @@
 # Monitor Controller File structure:
 * `/monitors`: contains the monitoring scripts (RES, KERN and SYS)
-* `/helpers`: contain the randomfile generator and ressource (CPU & Memory measuring script)
+* `/helpers`: contain the randomfile generator and ressource (CPU & Memory measuring script) with instructions
 * `/middleware`: contains the actual middleware and controlls the monitoring scripts (KERN, RES and SYS)
-* install_source.sh: To install all needed dependencies
+* `install_source.sh`: To install all needed dependencies
 
+It is **highly** suggested to have a Linux or BSD based operating system running on your main machine. Mac OS should also work fine.
+Windows on the other hand can be troublesome. If you run a Windows distribution, please consider dualbooting or installing a distro on an external SSD i.e. Ubuntu.
 
-### Monitor Controller Instalation:
-This is not a monitoring script, but is used to evaluate how much ressources are used for training, testing models and how much ressources are used for the actual middleware.
-Measures CPU & IO : writes them to a .csv and calculates the mean. Takes a directory + time as args.
-For source:
-```
-python3 -m venv env
-source env/bin/activate
-pip install -r requirements.txt
-# Run the script for 10 seconds and save it in /tmp
-python3 main.py /tmp 10
+# Monitor Controller Instalation:
+
+## Prerequisite:
+You should have an ElectroSense sensor deployed and can SSH into it. 
+You have a Linux/BSD based operating system running on your machine.
+
+### Enabling SSH 
+You will need to enable SSH on your main machine. That way the sensor can rsync the data monitored to your device. Depending on the choosen operating system this can vary. Assuming a Debian-based OS i.e. Ubuntu execute the following commands:
+```bash
+sudo apt-get install openssh-server
+sudo systemctl enable ssh
+sudo systemctl start ssh
 ```
 
-For binary:
+To check if the openssh-server is running use the following command:
 ```
-chmod +x main
-./main /tmp 10
+sudo systemctl status ssh
 ```
+
 
 
 ### Setup Pi
