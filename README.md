@@ -80,13 +80,33 @@ python3 cli.py collect
 Sample Input:
 ```
 python3 cli.py collect
-Please add a short description for this task: Training data gathering for anomaly detection
+Please add a short description for this task: Testing data gathering for anomaly detection
 normal, poc, dark or raas (normal, poc, dark, raas): raas
 Which category testing or training (training, testing): testing
-time in seconds [3600]: 3600
+time in seconds [3600]: 20
 Which monitors (i.e RES,KERN,SYS): RES,KERN,SYS
 Server path (i.e root@194.233.160.46:/root/data): username@mypcip:/home/username/Desktop/data
-Type anomaly or classification (anomaly, classification): classification
+Type anomaly or classification (anomaly, classification): anomaly
+```
+Sample Output:
+```
+Stopping Services if they are still running...
+Starting Monitor Services and running it for 20 seconds
+Please wait 20 seconds to start a new Monitoring Todo
+  [####################################]  100%          
+Finished montioring for 20.06 seconds.
+Sending data to server  for monitor RES...
+Data sent to server and deleted from local directory
+Sending data to server  for monitor KERN...
+Data sent to server and deleted from local directory
+Sending data to server  for monitor SYS...
+Data sent to server and deleted from local directory
+Table for the device with the following cpu-id: 00000000fd4336c8
+╒═════╤══════════════════════════════════════════════╤════════╤════════════╤═════════╤══════════════╤═══════════╤════════╤══════════╤════════════╤═════════════╕
+│   # │ Description                                  │ Task   │ Category   │ Type    │ Monitors     │   Seconds │ Done   │ Sent     │      Added │   Completed │
+╞═════╪══════════════════════════════════════════════╪════════╪════════════╪═════════╪══════════════╪═══════════╪════════╪══════════╪════════════╪═════════════╡
+│   1 │ Testing data gathering for anomaly detection │ raas   │ testing    │ anomaly │ RES,KERN,SYS │        20 │ Done   │ Not Done │ 1660481675 │  1660481704 │
+╘═════╧══════════════════════════════════════════════╧════════╧════════════╧═════════╧══════════════╧═══════════╧════════╧══════════╧════════════╧═════════════╛
 ```
 
 ### Command Show
@@ -94,31 +114,53 @@ For viewing all past monitoring sessions. No addition input required by the user
 ```
 python3 cli.py show
 ```
+Shows the table as seen in the previous sample output.
+
+
+### Command Send
+For sending the metadata to the Data Anaylsis Application to start the training/evaluating procedure. Can be called with `python3 cli.py send`. The index refers to # in the table. Note, do not send testing data to the server, if you have not trained the models yet. In the following example, the server already had the trained models ready to be evaluated. 
+
+Sample Input:
 ```
-Sample Output
-╒═════╤══════════════════════════╤════════╤════════════╤════════════════╤══════════════╤═══════════╤════════╤══════════╤════════════╤═════════════╕
-│   # │ Description              │ Task   │ Category   │ Type           │ Monitors     │   Seconds │ Done   │ Sent     │      Added │   Completed │
-╞═════╪══════════════════════════╪════════╪════════════╪════════════════╪══════════════╪═══════════╪════════╪══════════╪════════════╪═════════════╡
-│   1 │ normal                   │ normal │ training   │ anomaly        │ RES,KERN,SYS │        30 │ Done   │ Done     │ 1660448633 │  1660448673 │
-├─────┼──────────────────────────┼────────┼────────────┼────────────────┼──────────────┼───────────┼────────┼──────────┼────────────┼─────────────┤
-│   2 │ Manually defining things │ normal │ testing    │ anomaly        │ RES,KERN     │        60 │ Done   │ Done     │ 1660448884 │  1660448950 │
-├─────┼──────────────────────────┼────────┼────────────┼────────────────┼──────────────┼───────────┼────────┼──────────┼────────────┼─────────────┤
-│   3 │ nanana                   │ normal │ training   │ classification │ RES,KERN,SYS │        30 │ Done   │ Not Done │ 1660449421 │  1660449463 │
-├─────┼──────────────────────────┼────────┼────────────┼────────────────┼──────────────┼───────────┼────────┼──────────┼────────────┼─────────────┤
-│   4 │ keerd                    │ poc    │ training   │ classification │ KERN,SYS,RES │        30 │ Done   │ Not Done │ 1660449537 │  1660449575 │
-├─────┼──────────────────────────┼────────┼────────────┼────────────────┼──────────────┼───────────┼────────┼──────────┼────────────┼─────────────┤
-│   5 │ raas                     │ raas   │ training   │ classification │ KERN,RES,SYS │        30 │ Done   │ Done     │ 1660449629 │  1660449666 │
-├─────┼──────────────────────────┼────────┼────────────┼────────────────┼──────────────┼───────────┼────────┼──────────┼────────────┼─────────────┤
-│   6 │ test                     │ normal │ testing    │ classification │ KERN,RES,SYS │        30 │ Done   │ Done     │ 1660449794 │  1660449833 │
-╘═════╧══════════════════════════╧════════╧════════════╧════════════════╧══════════════╧═══════════╧════════╧══════════╧════════════╧═════════════╛
+Sample User Input:
+Flask application i.e 127.0.0.1:5000: FlaskIP:5000
+Task index: 1
+```
+
+Sample Output:
+```
+Sending following data of device 00000000fd4336c8 to server flaskip:5000...
+############################################################
+Task: raas
+Description: Testing data gathering for anomaly detection 
+Server: username@mypcip:/home/username/Desktop/data/00000000fd4336c8/anomaly/testing/Testing_data_gathering_for_anomaly_detection_/raas
+Path: /home/username/Desktop/data/00000000fd4336c8/anomaly/testing
+Monitors: RES,KERN,SYS
+Category: testing
+ML Type: anomaly
+############################################################
+Data sent to server
+Table for the device with the following cpu-id: 00000000fd4336c8
+╒═════╤══════════════════════════════════════════════╤════════╤════════════╤═════════╤══════════════╤═══════════╤════════╤════════╤════════════╤═════════════╕
+│   # │ Description                                  │ Task   │ Category   │ Type    │ Monitors     │   Seconds │ Done   │ Sent   │      Added │   Completed │
+╞═════╪══════════════════════════════════════════════╪════════╪════════════╪═════════╪══════════════╪═══════════╪════════╪════════╪════════════╪═════════════╡
+│   1 │ Testing data gathering for anomaly detection │ raas   │ testing    │ anomaly │ RES,KERN,SYS │        20 │ Done   │ Done   │ 1660481675 │  1660481704 │
+╘═════╧══════════════════════════════════════════════╧════════╧════════════╧═════════╧══════════════╧═══════════╧════════╧════════╧════════════╧═════════════╛
+
 ```
 
 
 ### Command Send:
-For sending the metadata to the Data Anaylsis Application to start training/evaluating data
+For sending the metadata to the Data Anaylsis Application to start the training/evaluating procedure. The # column refers to the index:
 ```
 python3 cli.py send
 ```
+```
+
+
+
+``
+
 
 ### Command Live:
 Starts a live monitoring session for 60 minutes
