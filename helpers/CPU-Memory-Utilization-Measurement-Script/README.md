@@ -12,4 +12,9 @@ pip install -r requirements.txt
 ```
 
 ## Usgage
-Firstly a baseline needs to be established. This refers to the mean CPU & Memory utilization over a defined period. 
+Firstly a baseline needs to be established. This refers to the mean CPU & Memory utilization over a defined period (for example 10 Minutes).
+The script would thus be run for 10 minutes:
+```
+python3 utilization.py -m
+```
+After the defined period the user has to manually exit the program (PRESS CTRL+ C). After receiving this keyboard interrupt, you should have 2 files: ressources.csv and ressources_evaluation.csv`.
