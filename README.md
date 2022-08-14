@@ -71,7 +71,7 @@ source env/bin/activate
 ```
 ## Commands:
 Four commands are available to the User: Show, Collect, Send and Live.
-The user will be prompted to input additional information, after activiating on of these commands.
+The user will be prompted to input additional information, after activiating one of these commands.
 
 ### Command Collect
 For collecting training/evaluation data:
