@@ -73,8 +73,9 @@ python3 cli.py collect
 2. **Type of Behavior**: Options (normal, poc=Ransomware-PoC, raas=RAASNet, dark=DarkRadiation) What are you monitoring? The normal State of the machine or the behavior during ransomware execution. -> Mainly needed for training Classification Algorithms.
 3. **Category**: Is this data for training or evaluation/testing purposes?
 4. **Monitoring duration**: The time to monitor in seconds.
-5. **Monitoring Scripts to run in parallel**:  Which scripts do you want to run in parallel seperate by commas i.e: RES,KERN to run RES and KERN in parallalel. Minimum 1 monitoring script Required.
-6. **Type of Machine Learning**: (Anomaly Detecection or Classfication)
+5. **Monitoring Scripts to run in parallel**:  Which scripts do you want to run in parallel seperate by commas i.e: RES,KERN to run RES and KERN in parallalel. Minimum 1 monitoring script required.
+6. **Path to save data**: A specified folder on your machine
+7. **Type of Machine Learning**: (Anomaly detection or classfication)
 
 Sample Input:
 ```
