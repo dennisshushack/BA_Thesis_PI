@@ -68,12 +68,12 @@ python3 cli.py collect
 ```
  **Inputs:**
  
-  1.**Task Description**: A short description of your monitoring session.
-  2.**Type of Behavior**: Options (normal, poc=Ransomware-PoC, raas=RAASNet, dark=DarkRadiation) What are you monitoring? The normal State of the machine or the behavior during ransomware execution. -> Mainly needed for training Classification Algorithms.
-  3.**Category**: Is this data for training or evaluation/testing purposes?
-  4.**Monitoring duration**: The time to monitor in seconds.
-  5.**Monitoring Scripts to run in parallel**:  Which scripts do you want to run in parallel seperate by commas i.e: RES,KERN to run RES and KERN in parallalel. Minimum 1 monitoring script Required.
-  6. Type of training (Anomaly Detecection or Classfication)
+1.**Task Description**: A short description of your monitoring session.
+2.**Type of Behavior**: Options (normal, poc=Ransomware-PoC, raas=RAASNet, dark=DarkRadiation) What are you monitoring? The normal State of the machine or the behavior during ransomware execution. -> Mainly needed for training Classification Algorithms.
+3.**Category**: Is this data for training or evaluation/testing purposes?
+4.**Monitoring duration**: The time to monitor in seconds.
+5.**Monitoring Scripts to run in parallel**:  Which scripts do you want to run in parallel seperate by commas i.e: RES,KERN to run RES and KERN in parallalel. Minimum 1 monitoring script Required.
+6. Type of training (Anomaly Detecection or Classfication)
 
 Sample Input:
 ```
@@ -85,9 +85,7 @@ time in seconds [3600]: 3600
 Which monitors (i.e RES,KERN,SYS): RES,KERN,SYS
 Server path (i.e root@194.233.160.46:/root/data): username@mypcip:/home/username/Desktop/data
 Type anomaly or classification (anomaly, classification): classification
-
-
-``
+```
 
 ### Command Show
 For viewing all past monitoring sessions:
