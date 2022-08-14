@@ -80,8 +80,13 @@ def complete_todo(position: int):
         c.execute('UPDATE todos SET status = 2, date_completed = :date_completed WHERE position = :position',
                   {'position': position, 'date_completed': round(time.time())})
 
+def sent_todo(position: int):
+    with conn:
+        c.execute('UPDATE todos SET sent = 2 WHERE position = :position', {'position': position})
+
 
 # Gets the position of the todo with the given task.
 def get_position(task: str, seconds: int, description: str) -> int:
     c.execute('select position from todos where task = :task and seconds = :seconds and description = :description', {'task': task, 'seconds': seconds, 'description':description})
     return c.fetchone()[0]
+

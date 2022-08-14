@@ -25,6 +25,10 @@ echo "SSH connection created"
 apt-get update
 echo "System updated"
 
+# Update the system:
+apt-get upgrade -y
+echo "upgraded"
+
 # Install perf on the system (for performance monitoring)
 apt install linux-perf -y
 echo "perf was installed"
@@ -33,43 +37,45 @@ echo "perf was installed"
 apt install python3-venv -y
 echo "Installed python-venv"
 
-# Install support for ExFat (SSD) can be ignored if not need:
-apt install exfat-fuse exfat-utils -y
+# Can be activated if needed (SSD):
+# apt install exfat-fuse exfat-utils -y
 
-# Copies the files m1.service and m2.service and m3.service to /etc/systemd/system/:
 cd monitors/services
-cp m2.service m3.service m3.env /etc/systemd/system/
-cp m1_source.service /etc/systemd/system/m1.service
+cp RES.service KERN.service SYS.service SYS.env /etc/systemd/system/
 systemctl daemon-reload
 echo "Services copied to /etc/systemd/system/"
 echo "Services reloaded"
 
-# Creates the .env file for the 1st monitor and installs requirements.txt:
+# RES Monitor
+echo "Installing dependencies for the RES Monitor"
 cd ..
-cd monitor1/source
+cd RES/source
 python3 -m venv env
 source env/bin/activate
 pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt
 deactivate
-echo "Virtual environment created and requirements installed for monitor 1"
+echo "Depencencies installed"
 
-# Make monitor2 and monitor3 executable:
+# KERN Monitor and SYS Monitor
+echo "Installing dependencies for the KERN and SYS Monitor"
 cd ../../
-cd monitor2
-chmod +x new_sampler_50tmp.sh
+cd KERN
+chmod +x KERN.sh
 cd ..
-cd monitor3
-chmod +x monitor.sh
-echo "Monitor2 and monitor3 made executable"
+cd SYS
+chmod +x SYS.sh
+echo "Depencencies installed"
 
 # Installs the python-venv for the for the middleware:
+echo "Installing the dependencies for the Monitor Controller Middleware"
 cd ../../
 cd middleware
 python3 -m venv env
 source env/bin/activate
 pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org tabulate requests click python-dotenv
 deactivate
-echo "Virtual environment created and requirements installed for middleware"
+echo "Depencencies installed"
+echo "Done, you can start Monitoring"
 
 
 

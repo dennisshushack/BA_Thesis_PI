@@ -18,26 +18,15 @@ def cli():
     """Cli Group"""
     pass
 
-################ CLI Commands ################
-
+# END VERSION 1.0
+################ Send Command ################
 # This is for sending the data to the server:
 @cli.command(name='send', help='Send the data to the server indicate the correct task number')
 @click.option('--localhost', '-c', prompt='Flask application i.e 127.0.0.1:5000', help="Localhost path.")
 @click.option('--index', '-t', type=int,prompt='Task index', help="Task index i.e 1:")
-@click.option('--begin', '-d', prompt='Timestamp beginning (Type None if None)', help="Beginning Timestamp of your measurement", show_default=None)
-@click.option('--end', '-e', prompt='Timestamp end (Type None if None)', help="Ending timestamp of your measurement:", show_default=None)
-def send(localhost,index, begin, end):
+def send(localhost,index):
     # Gets all the data from the database at the given index
     todo = get_todo(index-1)
-    if begin == "None":
-        begin = None
-    if end == "None":
-        end = None
-    else:
-        begin = int(begin)
-        end = int(end)
-
-    # Gets the device serial number:
     serial = getserial()
 
     # Prints the data
@@ -50,50 +39,115 @@ def send(localhost,index, begin, end):
     click.echo("Monitors: {monitors}".format(monitors=todo.monitors))
     click.echo("Category: {category}".format(category=todo.category))
     click.echo("ML Type: {mltype}".format(mltype=todo.mltype))
-    click.echo("Beginning Timestamp: {begin}".format(begin=begin))
-    click.echo("Ending Timestamp: {end}".format(end=end))
     click.echo("############################################################")
 
     # Check if the server is up:
     try:
         response = requests.get("http://{localhost}/rest/test".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'))
     except:
-        click.echo("Server is not up!")
+        click.echo("Flask Application is not up!")
         return
-    
     # Create a request:
-    response = requests.post("http://{localhost}/rest/main".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'), json={"ml_type": todo.mltype, "experiment": todo.description, "monitors": todo.monitors, "behavior": todo.task, "category": todo.category, "path": todo.path, "device": serial, "begin": begin, "end": end})
+    response = requests.post("http://{localhost}/rest/main".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'), json={"ml_type": todo.mltype, "experiment": todo.description.replace(' ','_'), "monitors": todo.monitors, "behavior": todo.task, "category": todo.category, "path": todo.path, "device": serial})
+    
+    # Set send:
+    sent_todo(index-1)
+    click.echo("Data sent to server")
+    # Show the table
+    show_table()
     return
 
 # For Live Monitoring:
 @cli.command(name='live', help='Live Monitoring')
 @click.option('--localhost', '-c', prompt='Flask application i.e 127.0.0.1:5000', help="Localhost path.")
 @click.option('--server', '-s', prompt='Server path (i.e root@194.233.160.46:/root/data)', help="Server path.")
-@click.option('--monitors', '-m', prompt='Which monitors (i.e m1,m2,m3)', help="Comma separated list of monitors.")
+@click.option('--monitors', '-m', prompt='Which monitors (i.e RES,KERN,SYS)', help="Comma separated list of monitors.")
 def live(localhost, server, monitors):
-    # Default 1 hour monitoring:
- 
     
+    # Set defaults for live monitoring:
+    category = "testing"
+    seconds = 3600
+    task = "live"
+    description = "live"
+    mltype = "anomaly"
+    serial = getserial()
+    request_number = 0
 
-# A cli_tools command that adds a todo to the database.
+    # Check if the server is up:
+    if check_server(server) == False:
+        click.echo("The server is not reachable. Please check the path.")
+        return
+
+    # Check Flask Application is up:
+    try:
+        response = requests.get("http://{localhost}/rest/test".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'))
+    except:
+        click.echo("Flask Application is not up!")
+        return
+    
+    # Setting everything up:
+    arr_monitors, active_services = check_monitors(monitors)
+    server, path_for_request = create_directories_server(description, server, arr_monitors, category, task, mltype)
+    check_directories_on_device()
+    replace_env(server,seconds)
+
+    # Monitoring LOOP:
+    total = 0
+    click.echo("Starting a 1 hour long live monitoring session".format(seconds=seconds))
+    for service in active_services:
+        os.system("systemctl start {service} > /dev/null".format(service=service))
+    # Wait to let all services properly start up:
+    error = wait_till_counter_starts(active_services=active_services)
+    if error:
+        click.echo("Error: Could not start all services!")
+        return 
+    start = time.perf_counter()
+    with click.progressbar(range(seconds)) as progress:
+        for value in progress:
+            time.sleep(1)
+            if (total % 10 == 0) and (total != 0):
+                t1 = threading.Thread(target=thread_work, args=(server,active_services, total))
+                t1.start()
+            if (total % 11 == 0) and (total != 0):
+                # Sends a Post Request all 15 seconds to evaluate the data:
+                requests.post("http://{localhost}/rest/live".format(localhost=localhost), auth=HTTPBasicAuth('admin', 'admin'), json={"monitors": monitors, "path": path_for_request, "device": serial, 'number': request_number})
+                request_number += 1
+            total += 1
+    finish = time.perf_counter()
+    actual_running_time = round(finish-start, 2)
+    click.echo("Finished montioring for {total} seconds.".format(total=actual_running_time))
+    for service in active_services:
+        os.system("systemctl stop {service} > /dev/null".format(service=service))
+    # Done live monitoring:
+    click.echo("Live monitoring finished")
+    return 
+
+
+
+############### Collect Command ################
 @cli.command(name='collect',help="Starts the monitoring process.")
 @click.option('--description', '-c', prompt='Please add a short description for this task', help="Deskription for the task.")
 @click.option('--task', '-d', prompt='normal, poc, dark or raas', type=click.Choice(['normal','poc', 'dark', 'raas']))
 @click.option('--category', '-c',prompt='Which category testing or training', type=click.Choice(['training','testing']))
 @click.option('--seconds', '-t', type=int, prompt='time in seconds', default=3600, help="Time in seconds.")
-@click.option('--monitors', '-m', prompt='Which monitors (i.e m1,m2,m3)', help="Comma separated list of monitors.")
+@click.option('--monitors', '-m', prompt='Which monitors (i.e RES,KERN,SYS)', help="Comma separated list of monitors.")
 @click.option('--server', '-s', prompt='Server path (i.e root@194.233.160.46:/root/data)', help="Server path.")
 @click.option('--mltype', '-c',prompt='Type anomaly or classification', type=click.Choice(['anomaly','classification']))
 def add_todo(description, task, category ,seconds, monitors, server, mltype):
-    """Adds a todo to the database."""
-    
-    # First check:
+
+    #  Make sure, that anomaly training is not a ransomware:
     if category == 'training' and mltype == 'anomaly':
-        if task in ['ransom1', 'ransom2', 'ransom3']:
+        if task in ['dark', 'raas', 'poc']:
             click.echo("You can not use the ransomware tasks in the training set for anomaly detection.")
             return
+    
+    # Check that the description is not empty and has not yet been used:
+    if description == "" or description == 'live':
+        click.echo("Please add a description.")
+        return
 
-    # Checks if another todo is already running.
+ 
+    # Checks if another todo is already running:
     todos = get_all_todos()
     for todo in todos:
         if todo.status == 1:
@@ -126,13 +180,7 @@ def add_todo(description, task, category ,seconds, monitors, server, mltype):
         click.echo("Time must be greater than 0")
         return
 
-@cli.command(name='delete', help="Deletes a todo from the table")
-@click.option('--position', '-p',type=int, prompt='Position to delete', help="Position of the todo to delete.")
-def delete(position: int):
-    click.echo("Deleting Entry at position {position}".format(position=position))
-    delete_todo(position-1)
-    show_table()
-
+############# Show Command ################
 @cli.command(name='show', help='Show Table')
 def show():
     """
@@ -140,9 +188,7 @@ def show():
     """    
     show_table()
 
-
 ################ Helper Functios ################
-
 def check_server(server):
     """
     Tries to create a ssh connection.
@@ -181,8 +227,9 @@ def getserial():
 
 def check_monitors(monitors: str):
     """
-    Creates a list of systemd services runnung for the given monitors.
     Shuts down the systemd services, if they are still running.
+    Creates an array with the systemd services to activate for the 
+    monitoring process.
     """
     try:
         array_monitors = monitors.split(",")
@@ -191,21 +238,21 @@ def check_monitors(monitors: str):
         return
     active_services = []
     click.echo("Stopping Services if they are still running...")
-    os.system("systemctl stop m1.service > /dev/null")
-    os.system("systemctl stop m2.service > /dev/null")
-    os.system("systemctl stop m3.service > /dev/null")
+    os.system("systemctl stop RES.service > /dev/null")
+    os.system("systemctl stop KERN.service > /dev/null")
+    os.system("systemctl stop SYS.service > /dev/null")
     # Get all active services for new todo:
     for monitor in array_monitors:
-        if monitor == "m1":
-            active_services.append('m1.service')
-        elif monitor == "m2":
-            active_services.append('m2.service')
-        elif monitor == "m3":
-            active_services.append('m3.service')
+        if monitor == "RES":
+            active_services.append('RES.service')
+        elif monitor == "KERN":
+            active_services.append('KERN.service')
+        elif monitor == "SYS":
+            active_services.append('SYS.service')
         else:
             click.echo("You have entered an invalid monitor!")
             return
-    return array_monitors,active_services
+    return array_monitors, active_services
 
 def create_directories_server(description: str, server:str, monitors: array, category: str, task: str, mltype: str):
     """
@@ -237,13 +284,14 @@ def check_directories_on_device():
         os.system("rm -rf /tmp/monitors")
 
     os.system("mkdir /tmp/monitors")
-    os.system("mkdir /tmp/monitors/m1")
-    os.system("mkdir /tmp/monitors/m2")
-    os.system("mkdir /tmp/monitors/m3")
+    os.system("mkdir /tmp/monitors/RES")
+    os.system("mkdir /tmp/monitors/KERN")
+    os.system("mkdir /tmp/monitors/SYS")
        
+
 def start_monitor(seconds: int, position: int, active_services: array, server: str):
     """
-    Monitors the todo for the given amount of seconds
+    Main monitoring logic.
     """
     total = 0
     click.echo("Please wait {seconds} seconds to start a new Monitoring Todo".format(seconds=seconds))
@@ -274,65 +322,63 @@ def start_monitor(seconds: int, position: int, active_services: array, server: s
     complete(position)
     return error
 
+
 def complete(position: int):
     """
     Sets the monitoring todo to completed
     """
     complete_todo(position)
 
+
 def show_table():
     """
     Shows the table with all todos
     """
     tasks = get_all_todos()
-    # Adds all todos to the ASCII table
     table = []
     for task in tasks:
-        sent = "Done" if task.status == 2 else "Not Done"
+        sent = "Done" if task.sent == 2 else "Not Done"
         is_done = "Done" if task.status == 2 else "Not Done"
         table.append([task.position+1, task.description, task.task, task.category,task.mltype, task.monitors, str(task.seconds), is_done, sent, task.date_added,task.date_completed])
     table = tabulate(table, headers=["#", "Description", "Task", "Category", "Type", "Monitors", "Seconds", "Done", "Sent", "Added","Completed"], tablefmt="fancy_grid")
     click.echo("Table for the device with the following cpu-id: {cpu_id}".format(cpu_id=getserial()))
     click.echo(table)
 
+
 def replace_env(server: str ,seconds: int):
     """
-    Changes the environmental variables in m3.env and reloads the systemd service
+    Changes the environmental variables in SYS.env and 
+    reloads the systemd service.
     """
-    # Loads the m3.env file
     dotenv_file = dotenv.find_dotenv()
     dotenv.load_dotenv(dotenv_file)
-    
-    # Set new Value:
-    os.environ["RSYNCF"] = "{}/m3".format(server)
+    os.environ["RSYNCF"] = "{}/SYS".format(server)
     os.environ["SECONDS"] = "{}\seconds".format(str(seconds))
-    # Write changes to .env file.
     dotenv.set_key(dotenv_file, "RSYNCF", os.environ["RSYNCF"])
     dotenv.set_key(dotenv_file, "SECONDS", os.environ["SECONDS"])
-
-    # Copy the contents of file .env into /etc/systemd/system/m3.env 
-    os.system("cp .env /etc/systemd/system/m3.env")
+    os.system("cp .env /etc/systemd/system/SYS.env")
     os.system("sudo systemctl daemon-reload")
+
 
 def send_delete(server, directory):
     """
     Sends contents of the directory via rsync to the server and deletes all files in the directory
     """
-    # Check if the directory exists
     click.echo("Sending data to server  for monitor {}...".format(directory))
-    # Send all files located in the directory to the server
     os.system("rsync -vr /tmp/monitors/{directory}/ {server}/{directory} > /dev/null".format(server=server, directory=directory))
     click.echo("Data sent to server and deleted from local directory")
 
+
 def send_data(server, services):
     """
-    This sends the data from m1 & m2 to the server every 10 seconds, just to make sure it does 
+    This sends the data from KERN, SYS and RES to the server every 10 seconds, just to make sure it does 
     not get lost, through ransomware or a shutdown of the device.
     """
     for service in services:
         monitor = service.split(".")[0]
-        if monitor != "m3":
+        if monitor != "SYS":
             os.system("rsync -r /tmp/monitors/{monitor}/ {server}/{monitor} > /dev/null".format(monitor=monitor, server=server))
+
 
 def check_services(services):
     """
@@ -342,6 +388,7 @@ def check_services(services):
         status = os.system('systemctl is-active --quiet {service}'.format(service=service))
         if status != 0:
             os.system("systemctl restart {service} > /dev/null".format(service=service))
+
 
 
 def thread_work(server: str, active_services: array, total: int):
@@ -354,10 +401,10 @@ def thread_work(server: str, active_services: array, total: int):
     send_data(server, active_services)
     check_services(active_services)
 
+
 def wait_till_counter_starts(active_services: list):
     """
-    This function waits a certain time till the actual timer countdown starts!
-    Checks if in the directories /tmp/monitors/m1 and /tmp/monitors/m2 & /tmp/monitors/m3 any files are present
+    Checks if data is available in the /tmp/monitor directory:
     """
     start_time = time.time()
     error = True
@@ -374,9 +421,9 @@ def wait_till_counter_starts(active_services: list):
         if time.time() - start_time > 60:
             click.echo("You have been waiting for 60 seconds, there must be something wrong with your setup!")
             click.echo("Stopping Services if they are still running...")
-            os.system("systemctl stop m1.service > /dev/null")
-            os.system("systemctl stop m2.service > /dev/null")
-            os.system("systemctl stop m3.service > /dev/null")
+            os.system("systemctl stop RES.service > /dev/null")
+            os.system("systemctl stop KERN.service > /dev/null")
+            os.system("systemctl stop SYS.service > /dev/null")
             break
 
         # Checks if all numbers in the list_of_file_numbers are > 0:
@@ -387,6 +434,8 @@ def wait_till_counter_starts(active_services: list):
             time.sleep(1)
     
     return error
+
+
 
     
 if __name__ == '__main__':
