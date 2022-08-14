@@ -95,4 +95,4 @@ python3 cli.py send
 Starts a live monitoring session for 60 minutes
 ```
 python3 cli.py live
-``
+```
