@@ -4,26 +4,24 @@
 * `/middleware`: contains the actual middleware and controlls the monitoring scripts (KERN, RES and SYS)
 * `install_source.sh`: To install all needed dependencies for the Monitor Controller
 
-This Repository is part of the thesis: 
-Intelligent Framework to Detect Ransomware Affecting Linux-based and Resource-constrained Devices
-The repository for the Flas Data Analysis Application can be found here: https://github.com/dennisshushack/BA_Thesis_Flask
+This Repository is part of the thesis: Intelligent Framework to Detect Ransomware Affecting Linux-based and Resource-constrained Devices.
+The Flask Data Analysis Application repository can be found here: https://github.com/dennisshushack/BA_Thesis_Flask.
 
-If you have any troubles installing the Monitor Controller or other parts of the system feel free to contact me: dennis.shushack@uzh.ch
+If you have trouble installing the Monitor Controller or other parts of the system, feel free to contact me: dennis.shushack@uzh.ch.
 
+It is **highly** suggested to have a Linux or BSD-based operating system running on your main machine. Mac OS should also work fine.
+Windows, on the other hand, can be troublesome. If you run a Windows distribution, please consider dual-booting or installing a distribution on an external SSD, i.e., Ubuntu. It is recommended to have your machine connected via LAN and not WIFI, due to Network drops.
 
-It is **highly** suggested to have a Linux or BSD based operating system running on your main machine. Mac OS should also work fine.
-Windows on the other hand can be troublesome. If you run a Windows distribution, please consider dualbooting or installing a distro on an external SSD i.e. Ubuntu. It is also recommendet to have your machine connected via LAN and not WIFI, due to Network drops.
-
-Furthermore, the Monitor Controller saves all data in the `/tmp` folder on the Raspberry PI (/tmp/todo.db is the database /tmp/monitors is the folder where all data is saved temporerly on the PI.)
+Note, the Monitor Controller saves all essential data in the `/tmp` folder on the Raspberry PI ( i.e. /tmp/todo.db is the database,  /tmp/monitors is the folder where all data is saved temporarily on the PI.)
 
 # Monitor Controller Instalation:
 
 ## Prerequisite:
 You should have an ElectroSense sensor deployed and can SSH into it. 
-You have a Linux/BSD based operating system running on your machine.
+You have a Linux/BSD-based operating system running on your machine.
 
 ### Enabling SSH on Desktop/Server
-You will need to enable SSH on your main machine. That way the sensor can rsync the data monitored to your device. Depending on the choosen operating system this step may vary. Assuming a Debian-based OS i.e. Ubuntu execute the following commands:
+You will need to enable SSH on your main machine. That way, the sensor can sync the data monitored to your device. Depending on the chosen operating system, this step may vary. Assuming a Debian-based OS i.e., Ubuntu execute the following commands:
 ```
 sudo apt-get install openssh-server
 sudo systemctl enable ssh
@@ -42,9 +40,7 @@ ifconfig
 You can test if you can SSH from the Raspberry PI onto your main computer. 
 
 ## Installation of the Monitor Controller on the Raspberry PI:
-The installation is fairly simple, please just follow the folling commands:
-You will get prompted to insert your password (for the computer)
-This installs all dependencies needed.
+The installation is relatively simple. Only a small amount of commands is required:
 
 ```
 # Update the packages on the sensor:
