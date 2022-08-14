@@ -174,7 +174,7 @@ Sample Output:
 Stopping Services if they are still running...
 Starting a 1 hour long live monitoring session
 [------------------------------------]    0%  00:59:58
-``
+```
 
 
 
