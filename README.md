@@ -65,7 +65,7 @@ Before launching the Monitor Controller, perform the following instructions on t
 ```
 cd BA_Thesis_PI/middleware
 source env/bin/activate
-``
+```
 ## Commands:
 Four commands are available to the User: Show, Collect, Send and Live.
 The user will be prompted to input additional information, after activiating on of these commands.
