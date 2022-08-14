@@ -23,3 +23,13 @@ After for example 10 minutes the user has to manually exit the program (PRESS CT
 ### How to evaluate the Resource Utilization of a Program (i.e. Monitor Controller):
 Firstly execute the program to evaluate. Then perform the same experiment as you did with the baseline.
 In the end take the new ressource_evalutation.csv values and subtract them from the baseline ressource_evaluation.csv values. This should provide you with the isolated CPU and Memory utilization values.
+
+## CPU and Memory Consumption Monitoring of the training procedure (FLASK)
+The Flask application cretes during training (classification and anomaly detection) a file called output.csv. The following is a sample part of the file:
+```
+Name,Start,End,Duration
+Preprocess KERN,1660449722.1098392,1660449722.2070506,0.09721136093139648
+Preprocess RES,1660449722.2072127,1660449722.326735,0.1195223331451416
+Cleaning SYS's data,1660449722.3270695,1660449727.8525183,5.525448799133301
+Creating the corpus,1660449727.8526247,1660449728.7032807,0.8506560325622559
+``
