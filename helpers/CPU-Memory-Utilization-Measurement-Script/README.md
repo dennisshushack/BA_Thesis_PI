@@ -52,4 +52,4 @@ task cpu memory
 Preprocess KERN	28.16	84.28
 Preprocess KERN with baseline	25.19	45.58
 ```
-The row with baseline means the baseline has already been deducted from the new measurement. It is the one you need.
+The row with baseline means the baseline has already been deducted from the new measurement. It is the one you need. So pre-processing RES monitoring data took 25.19 % CPU and 45.58 % Memory.
