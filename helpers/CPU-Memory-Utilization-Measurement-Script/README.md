@@ -25,11 +25,26 @@ Firstly execute the program to evaluate. Then perform the same experiment as you
 In the end take the new ressource_evalutation.csv values and subtract them from the baseline ressource_evaluation.csv values. This should provide you with the isolated CPU and Memory utilization values.
 
 ## CPU and Memory Consumption Monitoring of the training procedure (FLASK)
-The Flask application cretes during training (classification and anomaly detection) a file called output.csv. The following is a sample part of the file:
+The Flask application creates during training (classification and anomaly detection) a file called output.csv. The following is a sample of this file.
 ```
 Name,Start,End,Duration
 Preprocess KERN,1660449722.1098392,1660449722.2070506,0.09721136093139648
-Preprocess RES,1660449722.2072127,1660449722.326735,0.1195223331451416
-Cleaning SYS's data,1660449722.3270695,1660449727.8525183,5.525448799133301
-Creating the corpus,1660449727.8526247,1660449728.7032807,0.8506560325622559
-``
+```
+It contains the different timestamps for: pre-processing, training and evaluation of ML/DL algorithms. This file can be used to measure the resource utilization of each of these steps. I.e. How much CPU & Memory was used for Cleaning SYS's call data.
+
+The following will show you how it works:
+1. Create a baseline, as you did before and save the file ressource_evalutation.csv in a different directory 
+2. Remove the files ressource_evalutation.csv and ressources.csv
+3. Start the Flask Application
+4. Start this script `python3 utilization.py -m`
+5. Perform a training procedure for either Classification or Anomaly Detection (Monitor Controller Send Command or use the file /middleware/test_request.py to do it manually.
+6. Wait till the training procedure stopped and then press CTRL + C
+7. Keep only the new ressources.csv file and remove ressource_evalutation.csv
+8. Add the baseline ressource_evalutation.csv and the output.csv file of the Flask Application to the same folder and exucute: `python3 utilization.py -e`
+9. You should now have a file generated called final.csv, which contains all the information needed
+
+Sample Output of final.csv:
+```
+Preprocess KERN	28.16	84.28
+Preprocess KERN with baseline	25.19	45.58
+```
