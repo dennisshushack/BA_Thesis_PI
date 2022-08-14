@@ -24,7 +24,7 @@ Note, the Monitor Controller saves all essential data in the `/tmp` folder on th
 You should have an ElectroSense sensor deployed and can SSH into it. 
 You have a Linux/BSD-based operating system running on your machine.
 
-### Enabling SSH on Desktop/Server
+### Enabling SSH on Desktop/
 You will need to enable SSH on your main machine. That way, the sensor can sync the data monitored to your device. Depending on the chosen operating system, this step may vary. Assuming a Debian-based OS i.e., Ubuntu execute the following commands:
 ```
 sudo apt-get install openssh-server
@@ -50,7 +50,7 @@ apt-get git
 git clone https://github.com/dennisshushack/BA_Thesis_PI.git
 cd BA_Thesis_PI
 chmod +x install_source.sh
-./install_source.sh -s username@serveripaddress
+./install_source.sh -s username@desktopipaddress
 ```
 Before launching the Monitor Controller, perform the following instructions on the Raspberry Pi sensor: 
 ```
@@ -118,7 +118,7 @@ Shows the table as seen in the previous sample output.
 
 
 ### Command Send
-For sending the metadata to the Data Anaylsis Application to start the training/evaluating procedure after collecting data. Can be called with `python3 cli.py send`. The index refers to # in the table. Note, do not send testing data to the server, if you have not trained the models yet. In the following example, the server already had the trained models ready to be evaluated. 
+For sending the metadata to the Data Anaylsis Application to start the training/evaluating procedure after collecting data. Can be called with `python3 cli.py send`. The index refers to # in the table. Note, do not send testing metadata to the server/desktop, if you have not trained the models yet. Furthermore, the Flask Application needs to be running. In the following example, the server already had the trained models ready to be evaluated. 
 
 **Inputs**:
 1. **Flask Application**: Refers to the ip + port of the flask application running. Make sure to set the IP of the FLask Application to your own IP (more detail in the Data Analyis Application section).
@@ -154,20 +154,27 @@ Table for the device with the following cpu-id: 00000000fd4336c8
 ```
 
 
-### Command Send:
-For sending the metadata to the Data Anaylsis Application to start the training/evaluating procedure. The # column refers to the index:
+### Command Live:
+This is for live evalutation. This evaluates all ML/DL anomaly detection and classification algorithms in Real Time (per sample). Before executing this command make sure:
+1. The Anomaly Detection Algorithms are trained
+2. The Classification Algorithms are trained
+3. The Flask Application is running on your machine (server/pc)
+The command `python3 cli.py live`will execute the command:
+
+Sample Input:
 ```
-python3 cli.py send
-```
+python3 cli.py live
+Flask application i.e 127.0.0.1:5000: FlaskIP:5000
+Server path (i.e root@194.233.160.46:/root/data): username@mypcip:/home/username/Desktop/data
+Which monitors (i.e RES,KERN,SYS): KERN,RES,SYS
 ```
 
-
-
+Sample Output:
+```
+Stopping Services if they are still running...
+Starting a 1 hour long live monitoring session
+[------------------------------------]    0%  00:59:58
 ``
 
 
-### Command Live:
-Starts a live monitoring session for 60 minutes
-```
-python3 cli.py live
-```
+
