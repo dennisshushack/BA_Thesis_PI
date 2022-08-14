@@ -25,16 +25,17 @@ Firstly execute the program, that you want to evaluate. Then perform the same ex
 In the end take the new ressource_evalutation.csv values and subtract them from the baseline ressource_evaluation.csv values. This should provide you with the isolated CPU and Memory utilization values.
 
 ## CPU and Memory Consumption Monitoring of pre-processing, training and evaluation (FLASK) 
-The CPU and Memory consumption can be measured either on the server or the Raspberry Pi sensor. This Thesis deployed it on the Raspberry Pi. As a hint, the following video may be helpfull in getting Tensorflow working: https://www.youtube.com/watch?v=vekblEk6UPc&t=903s
+The CPU and Memory consumption can be measured either on the server or the Raspberry Pi sensor. This Thesis deployed it on the Raspberry Pi. As a hint, the following video may be helpfull in getting Tensorflow working on a Pi: https://www.youtube.com/watch?v=vekblEk6UPc&t=903s.
 The Flask application creates during training (classification and anomaly detection) a file called output.csv. The following is a sample output of this file.
 ```
 Name,Start,End,Duration
 Preprocess KERN,1660449722.1098392,1660449722.2070506,0.09721136093139648
 ```
-It contains the different timestamps for: pre-processing, training and evaluation of ML/DL algorithms. This file can be used to measure the resource utilization of each of these steps. I.e. How much CPU & Memory was used for Preprocess the KERN monitor data.
+It contains the different timestamps for: pre-processing, training and evaluation of ML/DL algorithms. This file can be helpfull to measure the resource utilization of each of these steps. 
+I.e. How much CPU & Memory was used for pre-process the KERN monitoring data.
 
 The following will show you how it works:
-1. Deploy the Flask Application on the Sensor (rather difficult, but possible) or the serber
+1. Deploy the Flask Application on the Sensor (rather difficult, but possible) or the Server/Desktop
 2. Create a baseline, as you did before and save the file ressource_evalutation.csv in a different directory 
 3. Remove the files ressource_evalutation.csv and ressources.csv
 4. Start the Flask Application
@@ -47,6 +48,8 @@ The following will show you how it works:
 
 Sample Output of final.csv:
 ```
+task cpu memory
 Preprocess KERN	28.16	84.28
 Preprocess KERN with baseline	25.19	45.58
 ```
+The row with baseline means the baseline has already been deducted from the new measurement. It is the one you need.
