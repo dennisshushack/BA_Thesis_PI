@@ -3,7 +3,7 @@
 * `/helpers`: contain the randomfile generator and ressource monitor (CPU & Memory measuring script) with instructions
 * `/middleware`: contains the actual middleware and controlls the monitoring scripts (KERN, RES and SYS)
 * `install_source.sh`: To install all needed dependencies for the Monitor Controller
-* 
+
 This Repository is part of a Bachelor's Thesis. This README.md provides some additional help. The main installation steps are described in the installation instructions in the paper.
 
 The Flask Data Analysis Application repository can be found here: https://github.com/dennisshushack/BA_Thesis_Flask.
