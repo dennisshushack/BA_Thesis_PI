@@ -6,6 +6,7 @@
 
 This Repository is part of the thesis: 
 Intelligent Framework to Detect Ransomware Affecting Linux-based and Resource-constrained Devices
+The repository for the Flas Data Analysis Application can be found here: https://github.com/dennisshushack/BA_Thesis_Flask
 
 If you have any troubles installing the Monitor Controller or other parts of the system feel free to contact me: dennis.shushack@uzh.ch
 
@@ -13,6 +14,7 @@ If you have any troubles installing the Monitor Controller or other parts of the
 It is **highly** suggested to have a Linux or BSD based operating system running on your main machine. Mac OS should also work fine.
 Windows on the other hand can be troublesome. If you run a Windows distribution, please consider dualbooting or installing a distro on an external SSD i.e. Ubuntu. It is also recommendet to have your machine connected via LAN and not WIFI, due to Network drops.
 
+Furthermore, the Monitor Controller saves all data in the `/tmp` folder on the Raspberry PI (/tmp/todo.db is the database /tmp/monitors is the folder where all data is saved temporerly on the PI.)
 
 # Monitor Controller Instalation:
 
