@@ -66,8 +66,9 @@ For collecting training/evaluation data:
 ```
 python3 cli.py collect
 ```
- <ol>
-  <li>****Task Description****: A short description of your monitoring session: i.e. Training data gathering for anomaly detection</li>
+ **Inputs:**
+  1.**Task Description**: A short description of your monitoring session
+  -i.e. Training data gathering for anomaly detection
   <li>**Type of Behavior**: Options (normal, poc, raas, dark) What are you monitoring the normal state or the behavior during ransomware execution</li>
   <li>**Category**: Is this data for training or evaluation purposes?</li>
   <li>**Monitoring duration**: The time to monitor in seconds</li>
