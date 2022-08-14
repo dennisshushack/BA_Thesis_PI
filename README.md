@@ -83,7 +83,7 @@ python3 cli.py collect
 For viewing all past monitoring sessions:
 ```
 python3 cli.py show
-``
+```
 
 ### Command Send:
 For sending the metadata to the Data Anaylsis Application to start training/evaluating data
