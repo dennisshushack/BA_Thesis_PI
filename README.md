@@ -67,12 +67,13 @@ For collecting training/evaluation data:
 python3 cli.py collect
 ```
  **Inputs:**
-  1.**Task Description**: A short description of your monitoring session
-  -i.e. Training data gathering for anomaly detection
-  <li>**Type of Behavior**: Options (normal, poc, raas, dark) What are you monitoring the normal state or the behavior during ransomware execution</li>
-  <li>**Category**: Is this data for training or evaluation purposes?</li>
-  <li>**Monitoring duration**: The time to monitor in seconds</li>
-  <li>**Monitoring Scripts to run in parallel**:  Which scripts do you want to run in parallel seperate by commas i.e: RES,KERN to run RES and KERN in parallalel. Minimum 1 monitoring script Required: i.e RES</li>
+ 
+  1.**Task Description**: A short description of your monitoring session.
+    - i.e. Training data gathering for anomaly detection
+  2.**Type of Behavior**: Options (normal, poc, raas, dark) What are you monitoring the normal state or the behavior during ransomware execution
+  3.**Category**: Is this data for training or evaluation purposes?
+  4.**Monitoring duration**: The time to monitor in seconds
+  5.**Monitoring Scripts to run in parallel**:  Which scripts do you want to run in parallel seperate by commas i.e: RES,KERN to run RES and KERN in parallalel. Minimum 1 monitoring script Required: i.e RES.
 
 </ol>
 
