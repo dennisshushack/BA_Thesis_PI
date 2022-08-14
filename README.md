@@ -67,7 +67,7 @@ For collecting training/evaluation data:
 python3 cli.py collect
 ```
   
-**Inputs***:
+**Inputs**:
 1.**Task Description**: A short description of your monitoring session.
 2.**Type of Behavior**: Options (normal, poc=Ransomware-PoC, raas=RAASNet, dark=DarkRadiation) What are you monitoring? The normal State of the machine or the behavior during ransomware execution. -> Mainly needed for training Classification Algorithms.
 3.**Category**: Is this data for training or evaluation/testing purposes?
