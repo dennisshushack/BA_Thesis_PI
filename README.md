@@ -16,7 +16,7 @@ If you have trouble installing the Monitor Controller or other parts of the syst
 It is **highly** recommended to have a Linux or BSD-based operating system running on your main machine. Mac OS should also work fine.
 Windows, on the other hand, can be troublesome. If you are running Windows, please consider dual-booting or installing a different distribution i.e., Ubuntu. It is recommended to have your main machine connected via LAN and not WIFI, when using the Monitor Controller.
 
-Note, the Monitor Controller saves all essential data in the `/tmp` folder on the Raspberry PI ( i.e. /tmp/todo.db is the database,  /tmp/monitors is the folder where all data is saved temporarily on the PI.). Be aware, that this data is lost in a case of a reboot or shutdown of the device. 
+Note, the Monitor Controller saves all essential data in the `/tmp` folder on the Raspberry PI ( i.e. /tmp/todo.db is the database,  /tmp/monitors is the folder where all data is saved temporarily on the PI.). Be aware, that this data is lost in a case of a reboot or shutdown of the Raspberry Pi sensor. 
 
 ## Monitor Controller Instalation:
 
