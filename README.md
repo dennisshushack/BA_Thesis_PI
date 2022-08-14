@@ -59,7 +59,7 @@ source env/bin/activate
 ```
 ## Commands:
 Four commands are available to the User: Show, Collect, Send and Live.
-The user will be prompted to input additional information, after activiating one of these commands.
+The user will be prompted to input additional information, after activiating one of these commands. 
 
 ### Command Collect
 For collecting training/evaluation data:
@@ -69,13 +69,25 @@ python3 cli.py collect
  **Inputs:**
  
   1.**Task Description**: A short description of your monitoring session.
-    - i.e. Training data gathering for anomaly detection
-  2.**Type of Behavior**: Options (normal, poc, raas, dark) What are you monitoring the normal state or the behavior during ransomware execution
-  3.**Category**: Is this data for training or evaluation purposes?
-  4.**Monitoring duration**: The time to monitor in seconds
-  5.**Monitoring Scripts to run in parallel**:  Which scripts do you want to run in parallel seperate by commas i.e: RES,KERN to run RES and KERN in parallalel. Minimum 1 monitoring script Required: i.e RES.
+  2.**Type of Behavior**: Options (normal, poc=Ransomware-PoC, raas=RAASNet, dark=DarkRadiation) What are you monitoring? The normal State of the machine or the behavior during ransomware execution. -> Mainly needed for training Classification Algorithms.
+  3.**Category**: Is this data for training or evaluation/testing purposes?
+  4.**Monitoring duration**: The time to monitor in seconds.
+  5.**Monitoring Scripts to run in parallel**:  Which scripts do you want to run in parallel seperate by commas i.e: RES,KERN to run RES and KERN in parallalel. Minimum 1 monitoring script Required.
+  6. Type of training (Anomaly Detecection or Classfication)
 
-</ol>
+Sample Input:
+```
+python3 cli.py collect
+Please add a short description for this task: Training data gathering for anomaly detection
+normal, poc, dark or raas (normal, poc, dark, raas): raas
+Which category testing or training (training, testing): testing
+time in seconds [3600]: 3600
+Which monitors (i.e RES,KERN,SYS): RES,KERN,SYS
+Server path (i.e root@194.233.160.46:/root/data): username@mypcip:/home/username/Desktop/data
+Type anomaly or classification (anomaly, classification): classification
+
+
+``
 
 ### Command Show
 For viewing all past monitoring sessions:
