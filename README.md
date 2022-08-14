@@ -90,10 +90,28 @@ Type anomaly or classification (anomaly, classification): classification
 ```
 
 ### Command Show
-For viewing all past monitoring sessions:
+For viewing all past monitoring sessions. No addition input required by the user.
 ```
 python3 cli.py show
 ```
+```
+╒═════╤══════════════════════════╤════════╤════════════╤════════════════╤══════════════╤═══════════╤════════╤══════════╤════════════╤═════════════╕
+│   # │ Description              │ Task   │ Category   │ Type           │ Monitors     │   Seconds │ Done   │ Sent     │      Added │   Completed │
+╞═════╪══════════════════════════╪════════╪════════════╪════════════════╪══════════════╪═══════════╪════════╪══════════╪════════════╪═════════════╡
+│   1 │ normal                   │ normal │ training   │ anomaly        │ RES,KERN,SYS │        30 │ Done   │ Done     │ 1660448633 │  1660448673 │
+├─────┼──────────────────────────┼────────┼────────────┼────────────────┼──────────────┼───────────┼────────┼──────────┼────────────┼─────────────┤
+│   2 │ Manually defining things │ normal │ testing    │ anomaly        │ RES,KERN     │        60 │ Done   │ Done     │ 1660448884 │  1660448950 │
+├─────┼──────────────────────────┼────────┼────────────┼────────────────┼──────────────┼───────────┼────────┼──────────┼────────────┼─────────────┤
+│   3 │ nanana                   │ normal │ training   │ classification │ RES,KERN,SYS │        30 │ Done   │ Not Done │ 1660449421 │  1660449463 │
+├─────┼──────────────────────────┼────────┼────────────┼────────────────┼──────────────┼───────────┼────────┼──────────┼────────────┼─────────────┤
+│   4 │ keerd                    │ poc    │ training   │ classification │ KERN,SYS,RES │        30 │ Done   │ Not Done │ 1660449537 │  1660449575 │
+├─────┼──────────────────────────┼────────┼────────────┼────────────────┼──────────────┼───────────┼────────┼──────────┼────────────┼─────────────┤
+│   5 │ raas                     │ raas   │ training   │ classification │ KERN,RES,SYS │        30 │ Done   │ Done     │ 1660449629 │  1660449666 │
+├─────┼──────────────────────────┼────────┼────────────┼────────────────┼──────────────┼───────────┼────────┼──────────┼────────────┼─────────────┤
+│   6 │ test                     │ normal │ testing    │ classification │ KERN,RES,SYS │        30 │ Done   │ Done     │ 1660449794 │  1660449833 │
+╘═════╧══════════════════════════╧════════╧════════════╧════════════════╧══════════════╧═══════════╧════════╧══════════╧════════════╧═════════════╛
+``
+
 
 ### Command Send:
 For sending the metadata to the Data Anaylsis Application to start training/evaluating data
