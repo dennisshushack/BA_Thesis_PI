@@ -43,25 +43,19 @@ ifconfig
 ```
 
 ## Installation of the Monitor Controller on the Raspberry PI:
-The installation of the Monitor Controller is relatively simple. Only a small amount of commands is required:
+The installation of the Monitor Controller is relatively simple. Only a small amount of commands is required on the Raspberry PI:
 
 ```
-# Update the packages on the sensor:
 apt-get update
 
-# Install Git:
 apt-get git
 
-# Clone the repository:
 git clone https://github.com/dennisshushack/BA_Thesis_PI.git
 
-# Change Directory into the Git Repo:
 cd BA_Thesis_PI
 
-# Give access to the installer script:
 chmod +x install_source.sh
 
-# Run installer script (User will be prompted to enter his password)
 ./install_source.sh -s username@serveripaddress
 ```
 Before launching the Monitor Controller, perform the following instructions on the Raspberry Pi sensor: 
