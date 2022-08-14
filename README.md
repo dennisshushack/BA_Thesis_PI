@@ -3,8 +3,9 @@
 * `/helpers`: contain the randomfile generator and ressource monitor (CPU & Memory measuring script) with instructions
 * `/middleware`: contains the actual middleware and controlls the monitoring scripts (KERN, RES and SYS)
 * `install_source.sh`: To install all needed dependencies for the Monitor Controller
+* 
+This Repository is part of a Bachelor's Thesis. This README.md provides some additional help. The main installation steps are described in the installation instructions in the paper.
 
-This Repository is part of the thesis: Intelligent Framework to Detect Ransomware Affecting Linux-based and Resource-constrained Devices.
 The Flask Data Analysis Application repository can be found here: https://github.com/dennisshushack/BA_Thesis_Flask.
 
 If you have trouble installing the Monitor Controller or other parts of the system, feel free to contact me: dennis.shushack@uzh.ch.
@@ -37,10 +38,9 @@ You should now be able to SSH into your machine usining `ssh yourusername@PCIpAd
 sudo apt-get install net-tools
 ifconfig
 ```
-You can test if you can SSH from the Raspberry PI onto your main computer. 
 
 ## Installation of the Monitor Controller on the Raspberry PI:
-The installation is relatively simple. Only a small amount of commands is required:
+The installation of the Monitor Controller is relatively simple. Only a small amount of commands is required:
 
 ```
 # Update the packages on the sensor:
@@ -61,9 +61,35 @@ chmod +x install_source.sh
 # Run installer script (User will be prompted to enter his password)
 ./install_source.sh -s username@serveripaddress
 ```
+Before launching the Monitor Controller, perform the following instructions on the Raspberry Pi sensor: 
+```
+cd BA_Thesis_PI/middleware
+source env/bin/activate
+``
+## Commands:
+Four commands are available to the User: Show, Collect, Send and Live.
+The user will be prompted to input additional information, after activiating on of these commands.
 
+### Command Collect
+For collecting training/evaluation data:
+```
+python3 cli.py collect
+```
 
+### Command Show
+For viewing all past monitoring sessions:
+```
+python3 cli.py show
+``
 
+### Command Send:
+For sending the metadata to the Data Anaylsis Application to start training/evaluating data
+```
+python3 cli.py send
+```
 
-
-
+### Command Live:
+Starts a live monitoring session for 60 minutes
+```
+python3 cli.py live
+``
