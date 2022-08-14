@@ -62,7 +62,7 @@ Four commands are available to the User: Show, Collect, Send and Live.
 The user will be prompted to input additional information, after activiating one of these commands. 
 
 ### Command Collect
-For collecting training/evaluation data:
+For collecting training/evaluation data. This data will be saved on your main machine. It is synced to your machine.
 ```
 python3 cli.py collect
 ```
@@ -118,11 +118,15 @@ Shows the table as seen in the previous sample output.
 
 
 ### Command Send
-For sending the metadata to the Data Anaylsis Application to start the training/evaluating procedure. Can be called with `python3 cli.py send`. The index refers to # in the table. Note, do not send testing data to the server, if you have not trained the models yet. In the following example, the server already had the trained models ready to be evaluated. 
+For sending the metadata to the Data Anaylsis Application to start the training/evaluating procedure after collecting data. Can be called with `python3 cli.py send`. The index refers to # in the table. Note, do not send testing data to the server, if you have not trained the models yet. In the following example, the server already had the trained models ready to be evaluated. 
+
+**Inputs**:
+1. **Flask Application**: Refers to the ip + port of the flask application running. Make sure to set the IP of the FLask Application to your own IP (more detail in the Data Analyis Application section).
+2. **Task Index**: Refers to the # column
 
 Sample Input:
 ```
-Sample User Input:
+python3 cli.py send
 Flask application i.e 127.0.0.1:5000: FlaskIP:5000
 Task index: 1
 ```
