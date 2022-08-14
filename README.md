@@ -3,7 +3,7 @@
 ##  File structure 
 * `/monitors`: Directory containing the monitoring scripts (RES, KERN and SYS).
 * `/helpers`: Directory containing a random-file generator and ressource monitor (CPU & Memory utilization measuring script) with instructions.
-* `/middleware`: Directory containing the middleware, which controls the monitoring scripts (KERN, RES and SYS)
+* `/middleware`: Directory containing the Monitor Controller middleware, which controls the monitoring scripts (KERN, RES and SYS)
 * `install_source.sh`: File to install all needed dependencies for the Monitor Controller
 
 ## Overview
