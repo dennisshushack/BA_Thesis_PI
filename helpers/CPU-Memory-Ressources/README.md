@@ -1,4 +1,4 @@
-# CPU-Memory-Resources Utilization Script
+# CPU and Memory Utilization Script
 
 When deployed on the sensor, this script was used to evaluate the CPU and Memory consumption of the Data Analysis Application (Flask) 
 and the Monitor Controller. See Chapter Experiments: Performance Metrics Experiment.
